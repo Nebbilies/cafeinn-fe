@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+  background: #f7f8f5;
+  min-width: 320px;
+}
+
+button, a, input {
+  -webkit-tap-highlight-color: transparent;
+}

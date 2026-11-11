@@ -1,0 +1,15 @@
+{
+  "language": "Ngôn ngữ",
+  "eyebrow": "Cà phê · Âm nhạc · Học tập",
+  "title": "Chào mừng đến CafeInn",
+  "description": "Nền tảng cho những trải nghiệm trọn vẹn tại quán.",
+  "serviceTitle": "Kết nối dịch vụ",
+  "loading": "Đang kiểm tra",
+  "online": "Đã kết nối",
+  "offline": "Chưa kết nối",
+  "loadingDescription": "Đang kiểm tra kết nối đến dịch vụ CafeInn.",
+  "onlineDescription": "Dịch vụ đang phản hồi bình thường.",
+  "offlineDescription": "Chưa thể kết nối đến dịch vụ. Vui lòng thử lại.",
+  "retry": "Kiểm tra lại",
+  "note": "Trang khởi động để kiểm tra nền tảng. Trạng thái kết nối không xác nhận cơ sở dữ liệu đã sẵn sàng."
+}

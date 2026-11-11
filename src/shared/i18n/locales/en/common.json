@@ -1,0 +1,15 @@
+{
+  "language": "Language",
+  "eyebrow": "Coffee · Music · Study",
+  "title": "Welcome to CafeInn",
+  "description": "A foundation for a complete cafe experience.",
+  "serviceTitle": "Service connection",
+  "loading": "Checking",
+  "online": "Connected",
+  "offline": "Not connected",
+  "loadingDescription": "Checking the connection to CafeInn services.",
+  "onlineDescription": "The service is responding normally.",
+  "offlineDescription": "The service cannot be reached. Please try again.",
+  "retry": "Check again",
+  "note": "A startup page for checking the foundation. Connection status does not confirm database readiness."
+}
