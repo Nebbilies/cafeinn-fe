@@ -1,0 +1,71 @@
+.button {
+  font-weight: var(--mantine-font-weight-medium);
+  line-height: 1.2;
+}
+
+.button:focus-visible,
+.input:focus-visible {
+  outline: 2px solid var(--cafe-border-focus);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .input[data-variant='default']:hover:not(:disabled, [data-error], :focus) {
+    border-color: var(--cafe-border-hover);
+  }
+}
+
+.input[data-variant='default']:focus,
+.input[data-variant='filled']:focus {
+  border-color: var(--cafe-border-focus);
+}
+
+.inputLabel {
+  font-weight: var(--mantine-font-weight-medium);
+}
+
+.input:disabled,
+.input[data-disabled] {
+  opacity: 1;
+}
+
+.badge {
+  font-weight: var(--mantine-font-weight-semibold);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.surface,
+.modalContent,
+.modalHeader {
+  background-color: var(--cafe-background-surface);
+  color: var(--cafe-text-default);
+}
+
+.surface[data-with-border] {
+  border-color: var(--cafe-border-default);
+}
+
+.modalTitle {
+  font-size: var(--mantine-font-size-md);
+  font-weight: var(--mantine-font-weight-medium);
+  line-height: var(--mantine-line-height-md);
+}
+
+.brand {
+  display: block;
+  flex-shrink: 0;
+}
+
+.brandLight,
+.brandDark {
+  display: block;
+  width: auto;
+  height: 64px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.brandDark { display: none; }
+:global([data-mantine-color-scheme='dark']) .brandLight { display: none; }
+:global([data-mantine-color-scheme='dark']) .brandDark { display: block; }

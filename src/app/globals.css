@@ -1,7 +1,11 @@
 body {
   margin: 0;
-  background: #f7f8f5;
+  background: var(--mantine-color-body);
   min-width: 320px;
+}
+
+body {
+  font-synthesis: none;
 }
 
 button, a, input {

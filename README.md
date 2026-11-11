@@ -59,6 +59,14 @@ Public Next.js environment variables are included in the browser bundle. Never p
 - URLs currently have no locale prefix.
 - Add matching keys to both translation resources when adding user-facing text. Vietnamese translation resources are application data; repository documentation is written in English.
 
+## Visual foundations
+
+The shared Mantine theme uses the CafeInn Figma Light/Dark foundations, a vendored Be Vietnam Pro font (400/500/600), and the approved logo exports. Fonts are served locally through Next.js; no external font service is required at build or runtime. Light is the default; Mantine remembers an explicit scheme selection independently of the locale cookie.
+
+Run `npm run dev` and open [the foundations gallery](http://localhost:3000/dev/foundations) to review colors, typography, components and keyboard states. Its fixtures need no backend. `/dev/foundations` returns 404 when served from a production build (`npm run build` followed by `npm start`).
+
+Read [docs/foundations.md](docs/foundations.md) for source nodes, values, asset provenance/licenses, supported semantic colors, and Mantine fallback coverage. Verify changes with the existing lint, typecheck, test and build scripts, plus browser checks in both schemes and locales.
+
 ## Structure
 
 - `src/app/`: route/layout composition.
