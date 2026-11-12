@@ -40,6 +40,18 @@ The build does not require a running backend or database. Health fetching happen
 
 ESLint is pinned to a release supported by the Next lint plugins. The lockfile records the exact dependency graph; use `npm ci` to reproduce it.
 
+## CI and Git hooks
+
+`npm ci` installs Husky hooks for local development:
+
+- **Pre-commit:** `npm run lint` checks the entire working tree.
+- **Pre-push:** `npm run typecheck` followed by `npm test`.
+- **Build:** runs on CI, not in Git hooks.
+
+GitHub Actions runs on every pull request, pushes to `main`, and manual dispatch. The `Quality checks` job installs the Node.js version from `.node-version` and npm from `packageManager`, installs the lockfile with `npm ci`, and runs lint, typecheck, tests, and build. No running backend or database is required. CI and production-only installs skip Husky setup.
+
+The `main` branch must require a pull request and the GitHub Actions `Quality checks` status check, including for administrators, with the branch up to date before merging. These are GitHub repository settings; the workflow file alone does not enforce them. A failed check is fixed by pushing another commit to the same pull request. The existing tests cover HTTP transport, not browser or end-to-end behavior.
+
 ## Environment
 
 No real environment file is created automatically. Copy `.env.example` to `.env.local` only when local overrides are needed.
