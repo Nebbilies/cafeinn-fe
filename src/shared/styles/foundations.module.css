@@ -61,7 +61,7 @@
 .brandDark {
   display: block;
   width: auto;
-  height: 64px;
+  height: var(--brand-logo-height, 64px);
   max-width: 100%;
   object-fit: contain;
 }

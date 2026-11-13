@@ -1,4 +1,34 @@
 {
+  "portal": {
+    "home": "Cổng quản lý CafeInn",
+    "navigation": "Điều hướng hệ thống",
+    "menu": "Menu",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu",
+    "expandMenu": "Mở rộng menu",
+    "collapseMenu": "Thu gọn menu",
+    "skipToContent": "Đến nội dung chính",
+    "welcome": "Chọn khu vực để bắt đầu làm việc.",
+    "placeholder": "Nội dung nghiệp vụ của khu vực này sẽ được bổ sung sau.",
+    "employeesTitle": "Nhân viên và phân quyền",
+    "sections": {
+      "sales": "Bán hàng",
+      "preparation": "Chế biến",
+      "study-room-bookings": "Đặt phòng học",
+      "shifts": "Ca làm việc",
+      "events": "Sự kiện",
+      "event-check-in": "Tiếp nhận sự kiện",
+      "employees": "Nhân viên",
+      "menu": "Thực đơn",
+      "tables": "Bàn",
+      "study-rooms": "Quản lý phòng học",
+      "adjustments": "Điều chỉnh",
+      "revenue": "Doanh thu",
+      "expenses": "Chi phí",
+      "policies": "Chính sách",
+      "audit-log": "Lịch sử"
+    }
+  },
   "foundations": {
     "colorScheme": "Giao diện",
     "light": "Sáng",

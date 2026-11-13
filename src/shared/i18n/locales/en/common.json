@@ -1,4 +1,34 @@
 {
+  "portal": {
+    "home": "CafeInn management portal",
+    "navigation": "System navigation",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "expandMenu": "Expand menu",
+    "collapseMenu": "Collapse menu",
+    "skipToContent": "Skip to main content",
+    "welcome": "Choose an area to start working.",
+    "placeholder": "Business content for this area will be added later.",
+    "employeesTitle": "Employees and permissions",
+    "sections": {
+      "sales": "Sales",
+      "preparation": "Preparation",
+      "study-room-bookings": "Study room bookings",
+      "shifts": "Work shifts",
+      "events": "Events",
+      "event-check-in": "Event check-in",
+      "employees": "Employees",
+      "menu": "Menu",
+      "tables": "Tables",
+      "study-rooms": "Study room management",
+      "adjustments": "Adjustments",
+      "revenue": "Revenue",
+      "expenses": "Expenses",
+      "policies": "Policies",
+      "audit-log": "History"
+    }
+  },
   "foundations": {
     "colorScheme": "Color scheme",
     "light": "Light",
