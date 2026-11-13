@@ -3,6 +3,7 @@
 import { Badge, Button, Container, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { LocaleSwitcher } from '@/shared/ui/locale-switcher';
+import { BrandLogo } from '@/shared/ui/brand-logo';
 import { useSystemStatus } from '../hooks/use-system-status';
 
 export function SystemStatusPanel() {
@@ -14,11 +15,11 @@ export function SystemStatusPanel() {
     <Container size="sm" py={{ base: 32, sm: 72 }}>
       <Stack gap="xl">
         <Group justify="space-between" align="center" wrap="wrap">
-          <Text fw={800} size="xl" c="teal.9">CafeInn</Text>
+          <BrandLogo />
           <LocaleSwitcher />
         </Group>
         <Stack gap="sm">
-          <Text size="xs" tt="uppercase" fw={700} c="dimmed" style={{ letterSpacing: '0.16em' }}>
+          <Text size="xs" tt="uppercase" fw={500} c="dimmed" style={{ letterSpacing: '0.16em' }}>
             {t('eyebrow')}
           </Text>
           <Title order={1} size="h1">{t('title')}</Title>
@@ -28,7 +29,7 @@ export function SystemStatusPanel() {
           <Stack gap="md">
             <Group justify="space-between" wrap="wrap">
               <Title order={2} size="h3">{t('serviceTitle')}</Title>
-              <Badge color={state === 'online' ? 'teal' : state === 'offline' ? 'orange' : 'gray'}
+              <Badge color={state === 'online' ? 'success' : state === 'offline' ? 'warning' : 'neutral'}
                 variant="light" role="status">
                 {t(state)}
               </Badge>

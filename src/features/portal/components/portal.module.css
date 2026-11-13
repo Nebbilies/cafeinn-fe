@@ -1,0 +1,106 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-sm);
+  padding-inline: 1.5rem;
+  background: var(--cafe-background-surface);
+  border-color: var(--cafe-border-default);
+}
+
+.headerBrand, .account {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  min-width: 0;
+}
+
+.logoLink { display: block; flex-shrink: 0; }
+.accountName { max-width: 11.25rem; }
+.avatar { background: var(--cafe-background-primary-light); color: var(--cafe-text-primary); font-size: .875rem; font-weight: 600; }
+
+.sidebar {
+  padding: .5rem 1rem 1rem;
+  background: var(--cafe-background-surface);
+  border-color: var(--cafe-border-default);
+}
+
+.sidebarControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3rem;
+  flex-shrink: 0;
+}
+
+.toggle { flex-shrink: 0; color: var(--cafe-text-default); }
+.toggle[data-collapsed] { transform: rotate(180deg); }
+.menuScroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
+.sessionSlot { height: 2.375rem; flex-shrink: 0; }
+.navigation { display: flex; flex-direction: column; gap: .25rem; }
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  min-height: 2.75rem;
+  padding: .625rem;
+  border-radius: var(--mantine-radius-md);
+  color: var(--cafe-text-default);
+  text-decoration: none;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+  line-height: var(--mantine-line-height-sm);
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+
+.navLabel { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.navLink[data-active] { background: var(--cafe-background-primary-light); border-left: .1875rem solid var(--cafe-border-focus); padding-left: .4375rem; color: var(--cafe-text-primary); }
+.navLink[data-collapsed] { width: 2.5rem; height: 2.75rem; }
+.navLink:active, .destination:active { background: var(--cafe-background-primary-light); }
+
+.icon {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  background-color: var(--cafe-text-dimmed);
+  mask-image: var(--portal-icon);
+  mask-size: 1.0416667rem 1.0416667rem;
+  mask-repeat: no-repeat;
+  mask-position: top left;
+}
+
+.icon[data-chevron] { mask-size: contain; background-color: currentColor; }
+.main { min-width: 0; background: var(--cafe-background-body); }
+.content { min-width: 0; min-height: calc(100dvh - 4rem); }
+.content:focus { outline: none; }
+.pageHeader { display: flex; align-items: center; gap: 1rem; min-height: 3.5rem; padding: .375rem 1.5rem; border-bottom: 1px solid var(--cafe-border-default); background: var(--cafe-background-surface); }
+.pageIdentity { flex: 1; min-width: 0; }
+.pageTitle { margin: 0; font-size: 1.125rem; font-weight: 600; line-height: 1.6; overflow-wrap: anywhere; }
+.pageContext { margin: .125rem 0 0; color: var(--cafe-text-dimmed); font-size: .75rem; overflow-wrap: anywhere; }
+.pageActions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pageBody { padding: 1rem 1.5rem; }
+.destinationGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .75rem; }
+.destination { display: flex; align-items: center; gap: .75rem; min-width: 0; min-height: 3.5rem; padding: 1rem; border: 1px solid var(--cafe-border-default); border-radius: var(--mantine-radius-md); background: var(--cafe-background-surface); color: var(--cafe-text-default); font-size: .875rem; overflow-wrap: anywhere; touch-action: manipulation; }
+.drawer, .drawerHeader { background: var(--cafe-background-surface); color: var(--cafe-text-default); }
+
+.navLink:focus-visible, .destination:focus-visible, .logoLink:focus-visible, .toggle:focus-visible {
+  outline: 2px solid var(--cafe-border-focus);
+  outline-offset: -2px;
+}
+
+.skipLink { position: fixed; top: .5rem; left: .5rem; z-index: 400; transform: translateY(-200%); padding: .75rem; background: var(--cafe-background-surface); color: var(--cafe-text-primary); border: 2px solid var(--cafe-border-focus); border-radius: var(--mantine-radius-md); }
+.skipLink:focus { transform: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .navLink:hover, .destination:hover { background: var(--cafe-background-primary-light); }
+}
+
+@media (max-width: 47.999em) {
+  .header { padding-inline: 1rem; }
+  .accountName { max-width: 5rem; }
+  .pageHeader { padding-inline: 1rem; flex-wrap: wrap; }
+  .pageBody { padding: 1rem; }
+}

@@ -9,6 +9,7 @@ The repository must work when cloned independently. The parent directory is the 
 ## Read guidelines by task
 
 - **Structure, naming, or new features:** read [.agents/architecture-and-naming.md](.agents/architecture-and-naming.md).
+- **Theme, tokens, fonts, logo assets, or component styling:** read [docs/foundations.md](docs/foundations.md) for verified Figma mappings and explicit fallbacks.
 - **Queries, mutations, caching, SSR, or API calls:** read [.agents/data-fetching.md](.agents/data-fetching.md).
 - **React/Next.js changes, rendering, or bundle optimization:** read [.agents/react-performance.md](.agents/react-performance.md).
 - **Motion, navigation transitions, or shared elements:** read [.agents/view-transitions.md](.agents/view-transitions.md) before proposing or adding animation.
@@ -27,3 +28,13 @@ Apply relevant guidelines together. The user's latest explicit decision takes pr
 - Inspect existing scripts before running lint, typecheck, tests, or builds. If the scaffold or script does not exist, state that the check cannot run; do not invent commands or claim success.
 - Keep changes within the task scope. Verify affected behavior and report results, limitations, and anything not verified.
 
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
