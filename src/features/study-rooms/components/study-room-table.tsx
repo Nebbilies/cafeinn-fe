@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Table, Tooltip } from '@mantine/core';
+import { Button, Table, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { CafeIcon } from '@/shared/ui/cafe-icon';
 import type { StudyRoom } from '../types/study-room.types.ts';
@@ -53,14 +53,11 @@ export function StudyRoomTable({ rooms, onDetail, onEdit, onDelete }: StudyRoomT
                   <Button variant="default" size="sm" classNames={rowButtonClassNames} px={8} leftSection={<CafeIcon name="pencil" />} onClick={() => onEdit(room)} aria-label={t('studyRooms.rowAction', { action: t('studyRooms.actions.edit'), name: room.name })}>
                     {t('studyRooms.actions.edit')}
                   </Button>
-                  <Tooltip label={t('studyRooms.deleteLocked')} disabled={!room.hasUsageHistory} withinPortal>
-                    <span>
-                      <Button variant="default" size="sm" classNames={rowButtonClassNames} px={8} leftSection={<CafeIcon name="trash" />} disabled={room.hasUsageHistory} onClick={() => onDelete(room)} aria-label={t('studyRooms.rowAction', { action: t('studyRooms.actions.delete'), name: room.name })}>
-                        {t('studyRooms.actions.delete')}
-                      </Button>
-                    </span>
-                  </Tooltip>
+                  <Button variant="default" size="sm" classNames={rowButtonClassNames} px={8} leftSection={<CafeIcon name="trash" />} disabled={room.hasUsageHistory} onClick={() => onDelete(room)} aria-label={t('studyRooms.rowAction', { action: t('studyRooms.actions.delete'), name: room.name })}>
+                    {t('studyRooms.actions.delete')}
+                  </Button>
                 </div>
+                {room.hasUsageHistory && <Text size="xs" c="dimmed" mt={4}>{t('studyRooms.deleteLocked')}</Text>}
               </Table.Td>
             </Table.Tr>
           ))}

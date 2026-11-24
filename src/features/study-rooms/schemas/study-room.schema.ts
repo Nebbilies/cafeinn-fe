@@ -14,8 +14,17 @@ export const studyRoomFormSchema = z.object({
 export type StudyRoomFormField = keyof z.infer<typeof studyRoomFormSchema>;
 export type StudyRoomFormErrors = Partial<Record<StudyRoomFormField, string>>;
 
+// NumberInput can emit digit strings with leading zeros before the field blurs.
+function normalizeWholeNumberInput(value: unknown) {
+  return typeof value === 'string' && /^[0-9]+$/.test(value) ? Number(value) : value;
+}
+
 export function validateStudyRoomForm(values: Record<StudyRoomFormField, unknown>) {
-  const result = studyRoomFormSchema.safeParse(values);
+  const result = studyRoomFormSchema.safeParse({
+    ...values,
+    capacity: normalizeWholeNumberInput(values.capacity),
+    hourlyRate: normalizeWholeNumberInput(values.hourlyRate),
+  });
   if (result.success) return { data: result.data, errors: {} as StudyRoomFormErrors };
   const errors: StudyRoomFormErrors = {};
   for (const issue of result.error.issues) {

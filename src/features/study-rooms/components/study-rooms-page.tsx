@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { Button, Paper } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { CafeIcon } from '@/shared/ui/cafe-icon';
-import { PortalPageHeader } from '@/features/portal/components/portal-page-header';
+import { PortalPageHeader } from '@/features/portal';
 import type { StudyRoom, StudyRoomInput } from '../types/study-room.types.ts';
 import { studyRoomFixtures } from '../fixtures/study-rooms.fixture.ts';
 import {

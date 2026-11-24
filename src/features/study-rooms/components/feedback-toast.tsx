@@ -21,7 +21,7 @@ export function FeedbackToast({ message, onClose }: { message: { id: number; tex
   return (
     <div role="status" aria-live="polite" className={classes.toast}>
       {message && (
-        <Notification key={message.id} icon={<CafeIcon name="info" size={20} />} classNames={{ icon: classes.toastIcon }} withBorder onClose={onClose} closeButtonProps={{ 'aria-label': t('studyRooms.dismiss') }}>
+        <Notification key={message.id} role="presentation" icon={<CafeIcon name="info" size={20} />} classNames={{ icon: classes.toastIcon }} withBorder onClose={onClose} closeButtonProps={{ 'aria-label': t('studyRooms.dismiss') }}>
           {message.text}
         </Notification>
       )}

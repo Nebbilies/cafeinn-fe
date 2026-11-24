@@ -65,3 +65,16 @@ test('validates the room form against backend column limits', () => {
   assert.deepEqual(invalid.errors, { name: 'nameRequired', capacity: 'capacityInvalid', hourlyRate: 'hourlyRateInvalid', amenities: 'amenitiesTooLong' });
   assert.equal(validateStudyRoomForm({ name: 'A', capacity: '', hourlyRate: 1, amenities: '' }).errors.capacity, 'capacityInvalid');
 });
+
+test('validates numeric input before blur without treating an empty rate as zero', () => {
+  const room = { name: 'Phòng Gió', amenities: '' };
+  assert.deepEqual(validateStudyRoomForm({ ...room, capacity: '004', hourlyRate: '000' }).data, {
+    ...room, capacity: 4, hourlyRate: 0,
+  });
+  assert.deepEqual(validateStudyRoomForm({ ...room, capacity: '', hourlyRate: '' }).errors, {
+    capacity: 'capacityInvalid', hourlyRate: 'hourlyRateInvalid',
+  });
+  assert.deepEqual(validateStudyRoomForm({ ...room, capacity: '0256', hourlyRate: '04294967296' }).errors, {
+    capacity: 'capacityInvalid', hourlyRate: 'hourlyRateInvalid',
+  });
+});
