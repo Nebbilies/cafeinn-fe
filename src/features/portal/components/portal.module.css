@@ -72,7 +72,7 @@
   mask-position: top left;
 }
 
-.icon[data-chevron] { mask-size: contain; background-color: currentColor; }
+.icon[data-current-color] { mask-size: contain; background-color: currentColor; }
 .main { min-width: 0; background: var(--cafe-background-body); }
 .content { min-width: 0; min-height: calc(100dvh - 4rem); }
 .content:focus { outline: none; }

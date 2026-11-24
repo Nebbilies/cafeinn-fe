@@ -36,10 +36,30 @@
 }
 
 .surface,
-.modalContent,
-.modalHeader {
+.modalContent {
   background-color: var(--cafe-background-surface);
   color: var(--cafe-text-default);
+}
+
+.modalHeader {
+  background-color: var(--cafe-background-primary-filled);
+  color: var(--cafe-text-on-primary);
+}
+
+.modalClose {
+  color: inherit;
+}
+
+.modalHeader .modalClose:hover {
+  background-color: var(--cafe-background-primary-filled-hover);
+}
+
+.modalClose:focus-visible {
+  outline-color: var(--cafe-text-on-primary);
+}
+
+.modalHeader + .modalBody {
+  padding-top: var(--mb-padding, var(--mantine-spacing-md));
 }
 
 .surface[data-with-border] {

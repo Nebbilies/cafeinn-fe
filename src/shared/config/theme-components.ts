@@ -103,7 +103,13 @@ export const themeComponents = {
   Card: Card.extend({ classNames: { root: classes.surface } }),
   Modal: Modal.extend({
     defaultProps: { padding: 'md', shadow: 'md', overlayProps: { backgroundOpacity: 1, color: 'var(--cafe-background-overlay)' } },
-    classNames: { content: classes.modalContent, header: classes.modalHeader, title: classes.modalTitle },
+    classNames: {
+      content: classes.modalContent,
+      header: classes.modalHeader,
+      title: classes.modalTitle,
+      close: classes.modalClose,
+      body: classes.modalBody,
+    },
     vars: (_, props) => ({ root: { '--modal-size': sizeValue(modalWidth, typeof props.size === 'string' ? props.size : undefined) } }),
   }),
   Table: Table.extend({
