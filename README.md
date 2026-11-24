@@ -2,6 +2,12 @@
 
 Next.js App Router foundation with strict TypeScript, Mantine, TanStack Query, and i18next. The startup page checks service connectivity and locale switching; it is not a finished business screen.
 
+## Staff portal
+
+Open `/login` to sign in or `/forgot-password` to reset a password. Staff with `users.manage` can administer employees at `/portal/employees`.
+
+Use the API URL from `.env.example` for local development. For a same-origin demo, set `NEXT_PUBLIC_API_BASE_URL=/api/v1` and `API_UPSTREAM_ORIGIN` to the Express origin before building. Set backend `CORS_ORIGIN` to the portal origin.
+
 ## Requirements
 
 - Node.js **26.13.0 LTS** (supported range: `^26.13.0`).
