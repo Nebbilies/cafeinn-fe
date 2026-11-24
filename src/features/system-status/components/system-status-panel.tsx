@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { Badge, Button, Container, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { LocaleSwitcher } from '@/shared/ui/locale-switcher';
@@ -16,7 +18,7 @@ export function SystemStatusPanel() {
       <Stack gap="xl">
         <Group justify="space-between" align="center" wrap="wrap">
           <BrandLogo />
-          <LocaleSwitcher />
+          <Group><Button component={Link} href="/portal">{t('portal.home')}</Button><LocaleSwitcher /></Group>
         </Group>
         <Stack gap="sm">
           <Text size="xs" tt="uppercase" fw={500} c="dimmed" style={{ letterSpacing: '0.16em' }}>

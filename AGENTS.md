@@ -23,6 +23,7 @@ Apply relevant guidelines together. The user's latest explicit decision takes pr
 - Keep business rules and data authorization in the backend. The frontend must not connect to MySQL or contain Prisma, database URLs, or backend secrets.
 - Use the selected libraries. Before adding code, check existing implementations, the standard library, native platform features, and installed dependencies. Add a dependency only for a concrete need.
 - Access remote client-side data through feature-level TanStack Query hooks. Server Components use server functions or prefetching; client hooks do not run on the server.
+- For paginated list APIs, send page, page size, search, filters, and sort in the request and query key. Render the returned `items` and use `pagination` for page controls. Reset to page 1 when criteria change and recover to a valid page when totals shrink.
 - Use compatible stable releases and check security patches when changing dependencies. Read actual versions and scripts from `package.json` and the lockfile; do not independently switch to Canary or enable experimental flags.
 - Provide placeholder values in `.env.example`; keep real `.env` files and secrets out of Git. Only values safe for public disclosure may use the `NEXT_PUBLIC_` prefix.
 - Inspect existing scripts before running lint, typecheck, tests, or builds. If the scaffold or script does not exist, state that the check cannot run; do not invent commands or claim success.

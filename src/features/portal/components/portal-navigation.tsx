@@ -4,18 +4,18 @@ import Link from 'next/link';
 import { Tooltip, UnstyledButton } from '@mantine/core';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { getPortalSection, portalSections } from '../portal-navigation';
+import { getPortalSection, type PortalSection } from '../portal-navigation';
 import { PortalIcon } from './portal-icon';
 import classes from './portal.module.css';
 
-export function PortalNavigation({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
+export function PortalNavigation({ sections, collapsed = false, onNavigate }: { sections: PortalSection[]; collapsed?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
   const { t } = useTranslation();
   const activeSection = getPortalSection(pathname);
 
   return (
     <nav aria-label={t('portal.navigation')} className={classes.navigation}>
-      {portalSections.map((section) => {
+      {sections.map((section) => {
         const label = t(`portal.sections.${section.slug}`);
         const active = activeSection?.slug === section.slug;
         return (

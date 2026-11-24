@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { requestJson } from '../src/shared/api/http-client.ts';
+import { requestJson, requestStaffJson } from '../src/shared/api/http-client.ts';
 import { ApiError } from '../src/shared/api/api-error.ts';
 import { serve } from './support/http-fixture.ts';
 
@@ -10,6 +10,14 @@ test('returns successful JSON from the HTTP endpoint', async (context) => {
     response.end('{"status":"ok"}');
   }, context);
   assert.deepEqual(await requestJson(url), { status: 'ok' });
+});
+
+test('staff API includes cookies on split origins and opts out of caching', async (context) => {
+  const transport = context.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 204 }));
+  await requestStaffJson('http://localhost:4000/api/v1/auth/logout', 'POST');
+  const [, options] = transport.mock.calls[0].arguments as unknown as [string, RequestInit];
+  assert.equal(options.credentials, 'include');
+  assert.equal(options.cache, 'no-store');
 });
 
 test('accepts an empty 204 response', async (context) => {
@@ -36,8 +44,12 @@ test('normalizes unsuccessful HTTP responses without exposing server details', a
 
 test('propagates cancellation to an in-flight HTTP request', async (context) => {
   let markStarted = () => {};
-  const started = new Promise<void>((resolve) => { markStarted = resolve; });
-  const url = await serve(() => { markStarted(); }, context);
+  const started = new Promise<void>((resolve) => {
+    markStarted = resolve;
+  });
+  const url = await serve(() => {
+    markStarted();
+  }, context);
   const controller = new AbortController();
   const pending = requestJson(url, { signal: controller.signal });
   const rejected = assert.rejects(pending, { name: 'AbortError' });

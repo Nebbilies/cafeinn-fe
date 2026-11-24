@@ -18,6 +18,27 @@ export const portalSections = [
 
 export type PortalSection = (typeof portalSections)[number];
 
+const permissions: Record<PortalSection['slug'], string> = {
+  sales: 'sales.manage',
+  preparation: 'sales.manage',
+  'study-room-bookings': 'sales.manage',
+  shifts: 'sales.manage',
+  events: 'events.manage',
+  'event-check-in': 'events.manage',
+  employees: 'users.manage',
+  menu: 'menu.manage',
+  tables: 'tables.manage',
+  'study-rooms': 'rooms.manage',
+  adjustments: 'refunds.approve',
+  revenue: 'reports.read',
+  expenses: 'expenses.manage',
+  policies: 'policies.manage',
+  'audit-log': 'audit.read',
+};
+export function permittedSections(grants: readonly string[]) {
+  return portalSections.filter((section) => grants.includes(permissions[section.slug]));
+}
+
 export function getPortalSection(pathname: string): PortalSection | undefined {
   return portalSections.find((section) => {
     const href = `/portal/${section.slug}`;

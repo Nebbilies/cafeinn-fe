@@ -1,5 +1,16 @@
 import { ApiError } from './api-error.ts';
 
+export function requestStaffJson(url: string, method = 'GET', body?: unknown, signal?: AbortSignal) {
+  return requestJson(url, {
+    method,
+    signal,
+    credentials: 'include',
+    cache: 'no-store',
+    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+}
+
 export async function requestJson(url: string, options: RequestInit = {}): Promise<unknown> {
   const response = await fetch(url, options);
   const body = await response.text();
@@ -13,8 +24,13 @@ export async function requestJson(url: string, options: RequestInit = {}): Promi
     let code: string | undefined;
     if (typeof data === 'object' && data !== null && 'error' in data) {
       const detail = data.error;
-      if (typeof detail === 'object' && detail !== null && 'code' in detail &&
-          typeof detail.code === 'string' && /^[A-Z0-9_]{1,64}$/.test(detail.code)) {
+      if (
+        typeof detail === 'object' &&
+        detail !== null &&
+        'code' in detail &&
+        typeof detail.code === 'string' &&
+        /^[A-Z0-9_]{1,64}$/.test(detail.code)
+      ) {
         code = detail.code;
       }
     }
