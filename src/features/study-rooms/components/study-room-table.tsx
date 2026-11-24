@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Table, Text } from '@mantine/core';
+import { Button, Table, Tooltip, VisuallyHidden } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { CafeIcon } from '@/shared/ui/cafe-icon';
 import type { StudyRoom } from '../types/study-room.types.ts';
@@ -15,6 +15,7 @@ type StudyRoomTableProps = {
 };
 
 const rowButtonClassNames = { section: classes.rowButtonSection };
+const tooltipEvents = { hover: true, focus: true, touch: true };
 
 export function StudyRoomTable({ rooms, onDetail, onEdit, onDelete }: StudyRoomTableProps) {
   const { t } = useTranslation();
@@ -53,11 +54,25 @@ export function StudyRoomTable({ rooms, onDetail, onEdit, onDelete }: StudyRoomT
                   <Button variant="default" size="sm" classNames={rowButtonClassNames} px={8} leftSection={<CafeIcon name="pencil" />} onClick={() => onEdit(room)} aria-label={t('studyRooms.rowAction', { action: t('studyRooms.actions.edit'), name: room.name })}>
                     {t('studyRooms.actions.edit')}
                   </Button>
-                  <Button variant="default" size="sm" classNames={rowButtonClassNames} px={8} leftSection={<CafeIcon name="trash" />} disabled={room.hasUsageHistory} onClick={() => onDelete(room)} aria-label={t('studyRooms.rowAction', { action: t('studyRooms.actions.delete'), name: room.name })}>
-                    {t('studyRooms.actions.delete')}
-                  </Button>
+                  <Tooltip label={t('studyRooms.deleteLocked')} disabled={!room.hasUsageHistory} events={tooltipEvents} withinPortal>
+                    {/* data-disabled keeps the button focusable so keyboard and touch users can reach the reason. */}
+                    <Button
+                      variant="default"
+                      size="sm"
+                      classNames={rowButtonClassNames}
+                      px={8}
+                      leftSection={<CafeIcon name="trash" />}
+                      data-disabled={room.hasUsageHistory || undefined}
+                      aria-disabled={room.hasUsageHistory || undefined}
+                      aria-describedby={room.hasUsageHistory ? `delete-locked-${room.id}` : undefined}
+                      onClick={room.hasUsageHistory ? undefined : () => onDelete(room)}
+                      aria-label={t('studyRooms.rowAction', { action: t('studyRooms.actions.delete'), name: room.name })}
+                    >
+                      {t('studyRooms.actions.delete')}
+                    </Button>
+                  </Tooltip>
                 </div>
-                {room.hasUsageHistory && <Text size="xs" c="dimmed" mt={4}>{t('studyRooms.deleteLocked')}</Text>}
+                {room.hasUsageHistory && <VisuallyHidden id={`delete-locked-${room.id}`}>{t('studyRooms.deleteLocked')}</VisuallyHidden>}
               </Table.Td>
             </Table.Tr>
           ))}
