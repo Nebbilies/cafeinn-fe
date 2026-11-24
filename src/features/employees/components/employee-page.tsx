@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import {
   ActionIcon,
   Avatar,
@@ -38,6 +38,7 @@ const nextSort: Record<EmployeeSort, EmployeeSort> = {
   'name.desc': 'id.asc',
 };
 const statuses = ['ACTIVE', 'INACTIVE'] as const;
+type EmployeeDialog = { employee: number | 'new'; viewOnly: boolean; generation: number };
 
 function EmployeeDetails({ employee }: { employee: Employee }) {
   const { t } = useTranslation();
@@ -162,8 +163,10 @@ export function EmployeePage() {
   const { t } = useTranslation();
   const client = useQueryClient();
   const [search, setSearch] = useState('');
-  const [editing, setEditing] = useState<number | 'new' | null>(null);
-  const [viewOnly, setViewOnly] = useState(false);
+  const [dialog, setDialog] = useState<EmployeeDialog | null>(null);
+  const dialogScope = useId();
+  const latestGeneration = useRef(0);
+  const editing = dialog?.employee;
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<EmployeeStatus | null>(null);
   const [sort, setSort] = useState<EmployeeSort>('id.asc');
@@ -175,15 +178,17 @@ export function EmployeePage() {
     retry: false,
   });
   const detail = useQuery({
-    queryKey: [...prefix, editing],
+    queryKey: [...prefix, 'detail', editing, dialogScope, dialog?.generation],
     enabled: typeof editing === 'number',
     queryFn: ({ signal }) => employeeDetail(Number(editing), signal),
     retry: false,
+    gcTime: 0,
   });
   const mutation = useMutation({
-    mutationFn: (body: unknown) => saveEmployee(typeof editing === 'number' ? editing : null, body),
-    onSuccess: async () => {
-      setEditing(null);
+    mutationFn: ({ dialog, body }: { dialog: EmployeeDialog; body: unknown }) =>
+      saveEmployee(dialog.employee === 'new' ? null : dialog.employee, body),
+    onSuccess: async (_, submitted) => {
+      setDialog((current) => current?.generation === submitted.dialog.generation ? null : current);
       await client.invalidateQueries({ queryKey: ['private', 'session'] });
       await client.invalidateQueries({ queryKey: ['private', 'employees'] });
     },
@@ -208,9 +213,8 @@ export function EmployeePage() {
     </Text>
   );
   const open = (id: number | 'new', readOnly = false) => {
-    setViewOnly(readOnly);
     mutation.reset();
-    setEditing(id);
+    setDialog({ employee: id, viewOnly: readOnly, generation: ++latestGeneration.current });
   };
   return (
     <Stack>
@@ -245,7 +249,7 @@ export function EmployeePage() {
               }}
             />
           </Group>
-          {editing === null && message}
+          {!dialog && message}
           <Table.ScrollContainer minWidth={540}>
             <Table>
               <Table.Thead>
@@ -302,22 +306,22 @@ export function EmployeePage() {
         </Stack>
       </Paper>
       <Modal
-        opened={editing !== null}
-        onClose={() => setEditing(null)}
-        title={t(editing === 'new' ? 'auth.create' : viewOnly ? 'auth.employeeDetails' : 'auth.edit')}
+        opened={dialog !== null}
+        onClose={() => setDialog(null)}
+        title={t(editing === 'new' ? 'auth.create' : dialog?.viewOnly ? 'auth.employeeDetails' : 'auth.edit')}
         closeButtonProps={{ 'aria-label': t('auth.closeDialog') }}
       >
         {message}
-        {viewOnly && detail.data ? (
+        {dialog?.viewOnly && detail.data ? (
           <EmployeeDetails employee={detail.data} />
-        ) : editing === 'new' || (typeof editing === 'number' && detail.data) ? (
+        ) : dialog && (editing === 'new' || detail.data) ? (
           <EmployeeForm
-            key={editing}
+            key={dialog.generation}
             row={editing === 'new' ? undefined : detail.data}
             pending={mutation.isPending}
-            onSave={mutation.mutate}
+            onSave={(body) => mutation.mutate({ dialog, body })}
           />
-        ) : detail.isPending && <Text role="status">{t('auth.loading')}</Text>}
+        ) : dialog && detail.isPending && <Text role="status">{t('auth.loading')}</Text>}
       </Modal>
     </Stack>
   );

@@ -6,7 +6,7 @@ Next.js App Router foundation with strict TypeScript, Mantine, TanStack Query, a
 
 Open `/login` to sign in or `/forgot-password` to reset a password. Staff with `users.manage` can administer employees at `/portal/employees`.
 
-Use the API URL from `.env.example` for local development. For a same-origin demo, set `NEXT_PUBLIC_API_BASE_URL=/api/v1` and `API_UPSTREAM_ORIGIN` to the Express origin before building. Set backend `CORS_ORIGIN` to the portal origin.
+Use the API URL from `.env.example` for local development. For a same-origin demo, set `NEXT_PUBLIC_API_BASE_URL=/api/v1` and `API_UPSTREAM_ORIGIN` to the Express origin before building. The rewrite accepts HTTP on loopback and requires HTTPS for remote origins. Set backend `CORS_ORIGIN` to the portal origin.
 
 ## Requirements
 

@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { sessionQuery, staffRequest } from '@/features/auth/api/auth.api';
 import { getPortalSection, permittedSections } from '../portal-navigation';
 import Link from 'next/link';
-import { ActionIcon, AppShell, Avatar, Burger, Drawer, Text } from '@mantine/core';
+import { ActionIcon, AppShell, Avatar, Burger, Drawer, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { BrandLogo } from '@/shared/ui/brand-logo';
 import { getAccountInitial } from '../portal-account';
@@ -38,23 +38,43 @@ export function PortalShell({ children }: { children: ReactNode }) {
   }, [client, destination, router, session.data]);
   const signOut = useMutation({
     mutationFn: () => staffRequest('/auth/logout', 'POST'),
-    onSuccess: () => {
+    onSuccess: async () => {
+      await client.cancelQueries({ queryKey: sessionQuery.queryKey, exact: true });
       client.setQueryData(sessionQuery.queryKey, null);
       client.removeQueries({ queryKey: ['private', 'employees'] });
     },
   });
+  const logoutAction = (
+    <>
+      <ActionIcon
+        variant="subtle"
+        color="error"
+        size={36}
+        loading={signOut.isPending}
+        aria-label={t('auth.logout')}
+        title={t('auth.logout')}
+        onClick={() => signOut.mutate()}
+      >
+        <PortalIcon name="logout" />
+      </ActionIcon>
+      {signOut.isError && <Text role="alert">{t('auth.errors.generic')}</Text>}
+    </>
+  );
   if (session.isError)
     return (
       <Text role="alert">
         {t('auth.errors.generic')} <button onClick={() => session.refetch()}>{t('auth.retry')}</button>
       </Text>
     );
-  if (!session.data || !allowed)
+  if (session.data && !sections.length) {
     return (
-      <Text role="status">
-        {t(session.data && !sections.length ? 'auth.errors.FORBIDDEN' : 'auth.loading')}
-      </Text>
+      <Group p="md">
+        <Text role="status">{t('auth.errors.FORBIDDEN')}</Text>
+        {logoutAction}
+      </Group>
     );
+  }
+  if (!session.data || !allowed) return <Text role="status">{t('auth.loading')}</Text>;
 
   return (
     <AppShell
@@ -88,18 +108,7 @@ export function PortalShell({ children }: { children: ReactNode }) {
           <Text size="sm" fw={500} truncate className={classes.accountName}>
             {session.data.fullName}
           </Text>
-          <ActionIcon
-            variant="subtle"
-            color="error"
-            size={36}
-            loading={signOut.isPending}
-            aria-label={t('auth.logout')}
-            title={t('auth.logout')}
-            onClick={() => signOut.mutate()}
-          >
-            <PortalIcon name="logout" />
-          </ActionIcon>
-          {signOut.isError && <Text role="alert">{t('auth.errors.generic')}</Text>}
+          {logoutAction}
         </div>
       </AppShell.Header>
       <AppShell.Navbar>
