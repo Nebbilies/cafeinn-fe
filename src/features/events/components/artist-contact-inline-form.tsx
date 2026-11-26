@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Button,
@@ -41,14 +41,17 @@ function ArtistFormBody({
   artist,
   onClose,
   onSaved,
+  onPendingChange,
 }: {
   artist?: Artist | null;
   onClose: () => void;
   onSaved?: (artist: Artist) => void;
+  onPendingChange?: (pending: boolean) => void;
 }) {
   const { t } = useTranslation();
   const createMutation = useCreateArtist();
   const updateMutation = useUpdateArtist();
+  const mountedRef = useRef(true);
 
   const [stageName, setStageName] = useState(artist?.stageName ?? '');
   const [kind, setKind] = useState<ArtistKind>(artist?.kind ?? 'BAND');
@@ -62,8 +65,21 @@ function ArtistFormBody({
   const pending = createMutation.isPending || updateMutation.isPending;
   const serverError = artist ? updateMutation.error : createMutation.error;
 
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      onPendingChange?.(false);
+    };
+  }, [onPendingChange]);
+
+  useEffect(() => {
+    onPendingChange?.(pending);
+  }, [pending, onPendingChange]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (pending) return;
     const parsed = artistFormSchema.safeParse({
       stageName,
       kind,
@@ -89,6 +105,7 @@ function ArtistFormBody({
       const saved = artist
         ? await updateMutation.mutateAsync({ id: artist.id, body: payload })
         : await createMutation.mutateAsync(payload);
+      if (!mountedRef.current) return;
       onSaved?.(saved);
       onClose();
     } catch {
@@ -226,15 +243,20 @@ export function ArtistContactInlineForm({
   onSaved,
 }: ArtistContactInlineFormProps) {
   const { t } = useTranslation();
+  const [saving, setSaving] = useState(false);
 
   return (
     <Modal
       opened={opened}
-      onClose={onClose}
+      onClose={() => {
+        if (!saving) onClose();
+      }}
+      closeOnClickOutside={!saving}
+      closeOnEscape={!saving}
       size={560}
       centered
       title={t(artist ? 'events.artists.editTitle' : 'events.artists.createTitle')}
-      closeButtonProps={{ 'aria-label': t('auth.closeDialog') }}
+      closeButtonProps={{ 'aria-label': t('auth.closeDialog'), disabled: saving }}
     >
       {opened && (
         <ArtistFormBody
@@ -242,6 +264,7 @@ export function ArtistContactInlineForm({
           artist={artist}
           onClose={onClose}
           onSaved={onSaved}
+          onPendingChange={setSaving}
         />
       )}
     </Modal>
