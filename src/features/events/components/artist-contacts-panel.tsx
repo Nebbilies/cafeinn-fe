@@ -277,10 +277,15 @@ export function ArtistContactsPanel() {
     }
   }, [denied, client]);
 
-  if (denied) return null;
+  const totalPages = list.data?.pagination.totalPages;
+  const pageCount = totalPages ?? 0;
+  const currentPage = Math.min(page, Math.max(1, pageCount));
 
-  const totalPages = list.data?.pagination.totalPages ?? 0;
-  const currentPage = Math.min(page, Math.max(1, totalPages));
+  if (totalPages !== undefined && page > Math.max(1, totalPages)) {
+    setPage(Math.max(1, totalPages));
+  }
+
+  if (denied) return null;
 
   return (
     <Stack gap="md">
@@ -519,8 +524,8 @@ export function ArtistContactsPanel() {
             </Table>
           </Table.ScrollContainer>
 
-          {totalPages > 1 && (
-            <Pagination value={currentPage} total={totalPages} onChange={setPage} />
+          {pageCount > 1 && (
+            <Pagination value={currentPage} total={pageCount} onChange={setPage} />
           )}
         </Stack>
       </Paper>
@@ -551,6 +556,9 @@ export function ArtistContactsPanel() {
         onConfirm={async (artist) => {
           try {
             await deleteMutation.mutateAsync(artist.id);
+            if (list.data && list.data.items.length <= 1 && page > 1) {
+              setPage((current) => Math.max(1, current - 1));
+            }
             setDeletingArtist(null);
             setFeedback(t('events.artists.deleted'));
           } catch {
