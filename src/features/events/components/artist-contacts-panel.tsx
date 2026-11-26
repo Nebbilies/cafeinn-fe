@@ -194,11 +194,15 @@ function ArtistDeleteModal({
   return (
     <Modal
       opened={artist !== null}
-      onClose={onClose}
+      onClose={() => {
+        if (!pending) onClose();
+      }}
+      closeOnClickOutside={!pending}
+      closeOnEscape={!pending}
       size={480}
       centered
       title={t('events.artists.deleteTitle')}
-      closeButtonProps={{ 'aria-label': t('auth.closeDialog') }}
+      closeButtonProps={{ 'aria-label': t('auth.closeDialog'), disabled: pending }}
     >
       <Stack gap="md">
         {error ? (
@@ -500,6 +504,7 @@ export function ArtistContactsPanel() {
                                 onClick={
                                   deletable
                                     ? () => {
+                                        if (deleteMutation.isPending) return;
                                         deleteMutation.reset();
                                         setDeletingArtist(artist);
                                       }
@@ -552,14 +557,16 @@ export function ArtistContactsPanel() {
         artist={deletingArtist}
         pending={deleteMutation.isPending}
         error={deleteMutation.error}
-        onClose={() => setDeletingArtist(null)}
+        onClose={() => {
+          if (!deleteMutation.isPending) setDeletingArtist(null);
+        }}
         onConfirm={async (artist) => {
           try {
             await deleteMutation.mutateAsync(artist.id);
             if (list.data && list.data.items.length <= 1 && page > 1) {
               setPage((current) => Math.max(1, current - 1));
             }
-            setDeletingArtist(null);
+            setDeletingArtist((current) => (current?.id === artist.id ? null : current));
             setFeedback(t('events.artists.deleted'));
           } catch {
             // Error is shown in the confirmation dialog.
