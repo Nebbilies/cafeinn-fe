@@ -226,6 +226,13 @@
       "programs": "Chương trình sự kiện",
       "artists": "Liên hệ nghệ sĩ"
     },
+    "programs": {
+      "workspaceTitle": "Chọn hoặc tạo liên hệ nghệ sĩ cho sự kiện",
+      "workspaceNote": "Tìm liên hệ nghệ sĩ đang hoạt động, cập nhật nhanh hoặc thêm liên hệ mới ngay trong không gian chương trình sự kiện.",
+      "selectedTitle": "Liên hệ nghệ sĩ đang chọn cho sự kiện",
+      "selectedEmpty": "Chưa chọn nghệ sĩ. Dùng ô tìm kiếm ở trên để chọn liên hệ có sẵn hoặc tạo mới ngay tại đây.",
+      "clearSelection": "Bỏ chọn"
+    },
     "artists": {
       "createTitle": "Thêm liên hệ nghệ sĩ",
       "editTitle": "Cập nhật liên hệ nghệ sĩ",

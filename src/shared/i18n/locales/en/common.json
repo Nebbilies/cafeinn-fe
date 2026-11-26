@@ -226,6 +226,13 @@
       "programs": "Event programs",
       "artists": "Artist contacts"
     },
+    "programs": {
+      "workspaceTitle": "Select or create an artist contact for an event",
+      "workspaceNote": "Search active artist contacts, edit selected details, or add a new contact inline while working on event programs.",
+      "selectedTitle": "Selected artist contact for this event",
+      "selectedEmpty": "No artist selected yet. Use the picker above to choose an existing contact or create one inline.",
+      "clearSelection": "Clear selection"
+    },
     "artists": {
       "createTitle": "Add artist contact",
       "editTitle": "Edit artist contact",
