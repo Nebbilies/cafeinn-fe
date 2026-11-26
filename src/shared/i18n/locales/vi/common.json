@@ -98,7 +98,7 @@
     },
     "filter": "Bộ lọc",
     "filterWithCount": "Bộ lọc ({{count}})",
-    "filterSummary": "Sức chứa: {{capacity}} · Hoạt động: {{status}}",
+    "filterSummary": "Sức chứa: {{capacity}} · Trạng thái: {{status}}",
     "all": "Tất cả",
     "clearFilters": "Xóa lọc",
     "columns": {
@@ -106,7 +106,7 @@
       "name": "Tên phòng",
       "capacity": "Sức chứa",
       "hourlyRate": "Giá / giờ",
-      "status": "Hoạt động",
+      "status": "Trạng thái",
       "actions": "Thao tác"
     },
     "status": {
