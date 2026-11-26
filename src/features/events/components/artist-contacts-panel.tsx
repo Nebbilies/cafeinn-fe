@@ -456,9 +456,9 @@ export function ArtistContactsPanel() {
                           <Text size="xs" c="dimmed">
                             {artist.hasHistory
                               ? t('events.artists.historySummary', {
-                                  invitations: artist.invitationCount,
-                                  assignments: artist.assignmentCount,
-                                })
+                                invitations: artist.invitationCount,
+                                assignments: artist.assignmentCount,
+                              })
                               : t('events.artists.noHistory')}
                           </Text>
                         </Table.Td>
@@ -471,55 +471,57 @@ export function ArtistContactsPanel() {
                           </Badge>
                         </Table.Td>
                         <Table.Td>
-                          <Group gap={4} wrap="nowrap">
-                            <Button
-                              variant="default"
-                              size="xs"
-                              leftSection={<CafeIcon name="eye" size={14} />}
-                              onClick={() => setDetailId(artist.id)}
-                            >
-                              {t('studyRooms.actions.detail')}
-                            </Button>
-                            <Button
-                              variant="default"
-                              size="xs"
-                              leftSection={<CafeIcon name="pencil" size={14} />}
-                              onClick={() => setFormModal({ opened: true, artist })}
-                            >
-                              {t('studyRooms.actions.edit')}
-                            </Button>
-                            <Tooltip
-                              label={t('events.artists.deleteLocked')}
-                              disabled={deletable}
-                              events={tooltipEvents}
-                              withinPortal
-                            >
+                          <Box pos="relative">
+                            <Group gap={4} wrap="nowrap">
                               <Button
                                 variant="default"
                                 size="xs"
-                                leftSection={<CafeIcon name="trash" size={14} />}
-                                data-disabled={!deletable || undefined}
-                                aria-disabled={!deletable || undefined}
-                                aria-describedby={!deletable ? `artist-delete-locked-${artist.id}` : undefined}
-                                onClick={
-                                  deletable
-                                    ? () => {
+                                leftSection={<CafeIcon name="eye" size={14} />}
+                                onClick={() => setDetailId(artist.id)}
+                              >
+                                {t('studyRooms.actions.detail')}
+                              </Button>
+                              <Button
+                                variant="default"
+                                size="xs"
+                                leftSection={<CafeIcon name="pencil" size={14} />}
+                                onClick={() => setFormModal({ opened: true, artist })}
+                              >
+                                {t('studyRooms.actions.edit')}
+                              </Button>
+                              <Tooltip
+                                label={t('events.artists.deleteLocked')}
+                                disabled={deletable}
+                                events={tooltipEvents}
+                                withinPortal
+                              >
+                                <Button
+                                  variant="default"
+                                  size="xs"
+                                  leftSection={<CafeIcon name="trash" size={14} />}
+                                  data-disabled={!deletable || undefined}
+                                  aria-disabled={!deletable || undefined}
+                                  aria-describedby={!deletable ? `artist-delete-locked-${artist.id}` : undefined}
+                                  onClick={
+                                    deletable
+                                      ? () => {
                                         if (deleteMutation.isPending) return;
                                         deleteMutation.reset();
                                         setDeletingArtist(artist);
                                       }
-                                    : undefined
-                                }
-                              >
-                                {t('studyRooms.actions.delete')}
-                              </Button>
-                            </Tooltip>
-                          </Group>
-                          {!deletable && (
-                            <VisuallyHidden id={`artist-delete-locked-${artist.id}`}>
-                              {t('events.artists.deleteLocked')}
-                            </VisuallyHidden>
-                          )}
+                                      : undefined
+                                  }
+                                >
+                                  {t('studyRooms.actions.delete')}
+                                </Button>
+                              </Tooltip>
+                            </Group>
+                            {!deletable && (
+                              <VisuallyHidden id={`artist-delete-locked-${artist.id}`}>
+                                {t('events.artists.deleteLocked')}
+                              </VisuallyHidden>
+                            )}
+                          </Box>
                         </Table.Td>
                       </Table.Tr>
                     );
