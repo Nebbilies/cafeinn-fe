@@ -81,6 +81,88 @@
       "audit-log": "Lịch sử"
     }
   },
+  "studyRooms": {
+    "title": "Phòng học và bảng giá",
+    "add": "Thêm phòng",
+    "searchLabel": "Tìm phòng học",
+    "searchPlaceholder": "Tìm theo tên hoặc mã",
+    "sort": "Sắp xếp",
+    "sortOptions": {
+      "code-asc": "Mã phòng (tăng dần)",
+      "code-desc": "Mã phòng (giảm dần)",
+      "name-asc": "Tên phòng (A–Z)",
+      "capacity-asc": "Sức chứa (tăng dần)",
+      "capacity-desc": "Sức chứa (giảm dần)",
+      "rate-asc": "Giá / giờ (tăng dần)",
+      "rate-desc": "Giá / giờ (giảm dần)"
+    },
+    "filter": "Bộ lọc",
+    "filterWithCount": "Bộ lọc ({{count}})",
+    "filterSummary": "Sức chứa: {{capacity}} · Trạng thái: {{status}}",
+    "all": "Tất cả",
+    "clearFilters": "Xóa lọc",
+    "columns": {
+      "code": "Mã phòng",
+      "name": "Tên phòng",
+      "capacity": "Sức chứa",
+      "hourlyRate": "Giá / giờ",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "status": {
+      "ACTIVE": "Hoạt động",
+      "MAINTENANCE": "Bảo trì"
+    },
+    "actions": {
+      "detail": "Chi tiết",
+      "edit": "Sửa",
+      "delete": "Xóa"
+    },
+    "rowAction": "{{action}} {{name}}",
+    "deleteLocked": "Phòng đã có lịch sử sử dụng nên không thể xóa.",
+    "empty": "Không có phòng phù hợp.",
+    "fields": {
+      "name": "Tên phòng",
+      "capacity": "Sức chứa",
+      "hourlyRate": "Giá / giờ (đ)",
+      "amenities": "Tiện ích"
+    },
+    "errors": {
+      "nameRequired": "Vui lòng nhập tên phòng.",
+      "nameTooLong": "Tên phòng tối đa 50 ký tự.",
+      "capacityInvalid": "Sức chứa phải là số nguyên từ 1 đến 255.",
+      "hourlyRateInvalid": "Giá / giờ phải là số nguyên không âm.",
+      "amenitiesTooLong": "Tiện ích tối đa 200 ký tự."
+    },
+    "createTitle": "Thêm phòng",
+    "editTitle": "Sửa phòng học",
+    "detailTitle": "Chi tiết bản ghi",
+    "maintenanceTitle": "Phòng tạm ngừng hoạt động",
+    "needsAction": "Cần xử lý",
+    "maintenanceNotice": "{{code}} tạm ngừng nhận đặt. Kiểm tra lịch bị ảnh hưởng trước khi mở lại.",
+    "reopen": "Đánh dấu hoạt động lại",
+    "deleteTitle": "Xóa bản ghi?",
+    "deleteNotice": "Chỉ xóa dữ liệu chưa được sử dụng. Thao tác này không áp dụng cho lịch sử giao dịch.",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "back": "Quay lại",
+    "close": "Đóng",
+    "saved": "Đã lưu thay đổi.",
+    "deleted": "Đã xóa phòng.",
+    "dismiss": "Đóng thông báo",
+    "pagination": {
+      "label": "Phân trang danh sách phòng",
+      "summary": "{{start}}–{{end}} trong {{total}} kết quả",
+      "empty": "0 kết quả",
+      "pageSize": "{{count}} dòng / trang",
+      "pageSizeLabel": "Số dòng mỗi trang",
+      "page": "Trang {{page}}",
+      "first": "Trang đầu",
+      "previous": "Trang trước",
+      "next": "Trang sau",
+      "last": "Trang cuối"
+    }
+  },
   "foundations": {
     "colorScheme": "Giao diện",
     "light": "Sáng",

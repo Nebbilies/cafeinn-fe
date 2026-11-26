@@ -1,0 +1,41 @@
+.workspace { padding: 1rem 1.5rem; }
+.browser { display: flex; flex-direction: column; gap: .75rem; padding: 1.5rem; }
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.toolbarSpacer { flex: 1; }
+.search { width: 15rem; }
+
+.table { table-layout: fixed; }
+.table th { font-weight: 500; color: var(--cafe-text-dimmed); white-space: nowrap; }
+.table th, .table td { height: 3rem; padding-block: .375rem; }
+.code { width: 6rem; text-align: center; }
+.name { width: auto; }
+.capacity { width: 6.5rem; text-align: center; }
+.rate { width: 6.5rem; text-align: right; font-variant-numeric: tabular-nums; }
+.status { width: 8rem; text-align: center; }
+.actions { width: 21rem; text-align: center; }
+.nameText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rowActions { display: flex; justify-content: center; gap: .5rem; }
+.rowButtonSection { margin-inline-end: .375rem; }
+.empty { padding-block: 2.5rem; text-align: center; color: var(--cafe-text-dimmed); }
+
+.pagination { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.paginationSummary { flex: 1; min-width: 10rem; }
+.pageLabel { min-width: 4.625rem; text-align: center; }
+
+.filterPanel { display: flex; flex-direction: column; gap: .75rem; width: 18.75rem; }
+
+.detailList { margin: 0; }
+.detailRow { display: grid; grid-template-columns: 9rem 1fr; align-items: center; min-height: 3rem; border-bottom: 1px solid var(--cafe-border-default); }
+.detailRow dt { color: var(--cafe-text-dimmed); font-size: var(--mantine-font-size-sm); }
+.detailRow dd { margin: 0; font-size: var(--mantine-font-size-sm); overflow-wrap: anywhere; }
+
+.toastIcon { background: transparent; color: var(--cafe-status-info); }
+.toast { position: fixed; top: 5rem; left: 50%; z-index: 400; width: min(24.5rem, calc(100vw - 2rem)); transform: translateX(-50%); }
+
+@media (max-width: 47.999em) {
+  .workspace { padding: 1rem; }
+  .browser { padding: 1rem; }
+  .toolbarSpacer { display: none; }
+  .search { width: 100%; order: -1; }
+}

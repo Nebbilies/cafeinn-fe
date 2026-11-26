@@ -1,0 +1,11 @@
+.icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--cafe-icon-size);
+  height: var(--cafe-icon-size);
+  background-color: currentColor;
+  mask-image: var(--cafe-icon);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}

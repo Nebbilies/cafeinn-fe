@@ -81,6 +81,88 @@
       "audit-log": "History"
     }
   },
+  "studyRooms": {
+    "title": "Study rooms and rates",
+    "add": "Add room",
+    "searchLabel": "Search study rooms",
+    "searchPlaceholder": "Search by name or code",
+    "sort": "Sort",
+    "sortOptions": {
+      "code-asc": "Room code (ascending)",
+      "code-desc": "Room code (descending)",
+      "name-asc": "Room name (A–Z)",
+      "capacity-asc": "Capacity (ascending)",
+      "capacity-desc": "Capacity (descending)",
+      "rate-asc": "Rate per hour (ascending)",
+      "rate-desc": "Rate per hour (descending)"
+    },
+    "filter": "Filters",
+    "filterWithCount": "Filters ({{count}})",
+    "filterSummary": "Capacity: {{capacity}} · Status: {{status}}",
+    "all": "All",
+    "clearFilters": "Clear filters",
+    "columns": {
+      "code": "Room code",
+      "name": "Room name",
+      "capacity": "Capacity",
+      "hourlyRate": "Rate / hour",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "MAINTENANCE": "Maintenance"
+    },
+    "actions": {
+      "detail": "Details",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "rowAction": "{{action}} {{name}}",
+    "deleteLocked": "This room has usage history and cannot be deleted.",
+    "empty": "No matching rooms.",
+    "fields": {
+      "name": "Room name",
+      "capacity": "Capacity",
+      "hourlyRate": "Rate / hour (VND)",
+      "amenities": "Amenities"
+    },
+    "errors": {
+      "nameRequired": "Enter a room name.",
+      "nameTooLong": "Room name can be at most 50 characters.",
+      "capacityInvalid": "Capacity must be a whole number from 1 to 255.",
+      "hourlyRateInvalid": "Rate per hour must be a non-negative whole number.",
+      "amenitiesTooLong": "Amenities can be at most 200 characters."
+    },
+    "createTitle": "Add room",
+    "editTitle": "Edit study room",
+    "detailTitle": "Record details",
+    "maintenanceTitle": "Room temporarily unavailable",
+    "needsAction": "Needs action",
+    "maintenanceNotice": "{{code}} is not accepting bookings. Check affected bookings before reopening.",
+    "reopen": "Mark as active again",
+    "deleteTitle": "Delete record?",
+    "deleteNotice": "Only unused data can be deleted. This does not apply to transaction history.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "close": "Close",
+    "saved": "Changes saved.",
+    "deleted": "Room deleted.",
+    "dismiss": "Dismiss notification",
+    "pagination": {
+      "label": "Room list pagination",
+      "summary": "{{start}}–{{end}} of {{total}} results",
+      "empty": "0 results",
+      "pageSize": "{{count}} rows / page",
+      "pageSizeLabel": "Rows per page",
+      "page": "Page {{page}}",
+      "first": "First page",
+      "previous": "Previous page",
+      "next": "Next page",
+      "last": "Last page"
+    }
+  },
   "foundations": {
     "colorScheme": "Color scheme",
     "light": "Light",

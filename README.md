@@ -75,7 +75,7 @@ Read [docs/foundations.md](docs/foundations.md) for source nodes, values, asset 
 
 ## Internal portal
 
-Open `/portal` for the internal layout preview. Its 15 destinations share a persistent header and sidebar; the menu collapses on desktop and opens in a drawer below 48em. Business pages currently contain placeholders. The account name `Minh` is fixture data, and all destinations are shown without authentication or permission filtering. Public guest-facing pages are outside this scope.
+Open `/portal` for the internal layout preview. Its 15 destinations share a persistent header and sidebar; the menu collapses on desktop and opens in a drawer below 48em. Business pages currently contain placeholders, except `/portal/study-rooms`, which shows the study room management UI over local fixture data (see [docs/study-room-management.md](docs/study-room-management.md)). The account name `Minh` is fixture data, and all destinations are shown without authentication or permission filtering. Public guest-facing pages are outside this scope.
 
 See [docs/portal-design.md](docs/portal-design.md) for routes, Figma references, asset provenance, and verification results.
 
