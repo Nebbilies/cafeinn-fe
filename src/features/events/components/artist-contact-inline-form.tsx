@@ -62,6 +62,7 @@ function ArtistFormBody({
   const [genre, setGenre] = useState(artist?.genre ?? '');
   const [notes, setNotes] = useState(artist?.notes ?? '');
   const [status, setStatus] = useState<ArtistStatus>(artist?.status ?? 'ACTIVE');
+  const [baseline] = useState(() => (artist ? toArtistPayload(artistToFormValues(artist)) : null));
   const [fieldErrors, setFieldErrors] = useState<FormFieldErrors>({});
 
   const pending = createMutation.isPending || updateMutation.isPending;
@@ -104,8 +105,7 @@ function ArtistFormBody({
     setFieldErrors({});
     const payload = toArtistPayload(parsed.data);
     try {
-      if (artist) {
-        const baseline = toArtistPayload(artistToFormValues(artist));
+      if (artist && baseline) {
         const patch = buildArtistPatchPayload(baseline, payload);
         if (Object.keys(patch).length === 0) {
           onClose();
@@ -286,7 +286,7 @@ function ArtistEditFormLoader({
 
   return (
     <ArtistFormBody
-      key={`edit-${detail.data.id}-${detail.dataUpdatedAt}`}
+      key={`edit-${detail.data.id}`}
       artist={detail.data}
       onClose={onClose}
       onSaved={onSaved}

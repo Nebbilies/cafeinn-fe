@@ -5,6 +5,7 @@ import { Alert, Badge, Box, Button, Divider, Group, Paper, Stack, Tabs, Text } f
 import { useTranslation } from 'react-i18next';
 import { CafeIcon } from '@/shared/ui/cafe-icon';
 import { PortalPageHeader } from '@/features/portal/components/portal-page-header';
+import { artistErrorKey } from '../api/artists.api';
 import { useArtistDetail } from '../hooks/use-artists';
 import { formatArtistCode } from '../schemas/artist.schema';
 import { ArtistContactPicker } from './artist-contact-picker';
@@ -39,6 +40,37 @@ function EventProgramArtistPanel() {
           <Text size="sm" c="dimmed" role="status">
             {t('auth.loading')}
           </Text>
+        )}
+
+        {selectedArtistId !== null && selectedDetail.error && (
+          <Alert color="error" role="alert" icon={<CafeIcon name="info" />}>
+            <Stack gap="xs">
+              <Text size="sm">
+                {t(artistErrorKey(selectedDetail.error), {
+                  defaultValue: t('auth.errors.generic'),
+                })}
+              </Text>
+              <Group gap="xs">
+                <Button
+                  variant="default"
+                  size="xs"
+                  loading={selectedDetail.isFetching}
+                  onClick={() => {
+                    void selectedDetail.refetch();
+                  }}
+                >
+                  {t('retry')}
+                </Button>
+                <Button
+                  variant="subtle"
+                  size="xs"
+                  onClick={() => setSelectedArtistId(null)}
+                >
+                  {t('events.programs.clearSelection')}
+                </Button>
+              </Group>
+            </Stack>
+          </Alert>
         )}
 
         {selectedArtist ? (
