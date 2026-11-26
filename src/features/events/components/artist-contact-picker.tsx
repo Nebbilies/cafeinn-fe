@@ -8,6 +8,7 @@ import {
   Combobox,
   Group,
   InputBase,
+  Loader,
   Stack,
   Text,
   useCombobox,
@@ -68,10 +69,13 @@ export function ArtistContactPicker({
   const listedMatch = value !== null ? items.find((item) => item.id === value) ?? null : null;
   const detailQuery = useArtistDetail(value !== null && !listedMatch ? value : null);
   const selectedArtist = listedMatch ?? detailQuery.data ?? null;
+  const isLoadingSelected = value !== null && !selectedArtist && detailQuery.isPending;
 
   const displayValue = selectedArtist
     ? `${formatArtistCode(selectedArtist.id)} · ${selectedArtist.stageName}`
-    : '';
+    : isLoadingSelected
+      ? t('auth.loading')
+      : '';
 
   return (
     <Stack gap="xs">
@@ -98,7 +102,9 @@ export function ArtistContactPicker({
             disabled={disabled}
             error={error}
             rightSection={
-              selectedArtist && !disabled ? (
+              isLoadingSelected ? (
+                <Loader size={14} aria-label={t('auth.loading')} />
+              ) : selectedArtist && !disabled ? (
                 <ActionIcon
                   variant="subtle"
                   size="sm"
@@ -115,7 +121,7 @@ export function ArtistContactPicker({
                 <Combobox.Chevron />
               )
             }
-            rightSectionPointerEvents={selectedArtist && !disabled ? 'auto' : 'none'}
+            rightSectionPointerEvents={selectedArtist && !disabled && !isLoadingSelected ? 'auto' : 'none'}
             onClick={() => combobox.openDropdown()}
             onFocus={() => combobox.openDropdown()}
             onChange={(event) => {
