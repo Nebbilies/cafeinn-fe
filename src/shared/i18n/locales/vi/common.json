@@ -221,6 +221,73 @@
     "cancel": "Hủy",
     "confirm": "Xác nhận"
   },
+  "events": {
+    "tabs": {
+      "programs": "Chương trình sự kiện",
+      "artists": "Liên hệ nghệ sĩ"
+    },
+    "artists": {
+      "createTitle": "Thêm liên hệ nghệ sĩ",
+      "editTitle": "Cập nhật liên hệ nghệ sĩ",
+      "detailTitle": "Chi tiết liên hệ nghệ sĩ",
+      "deleteTitle": "Xóa liên hệ nghệ sĩ?",
+      "deleteNotice": "Chỉ xóa liên hệ chưa từng phát sinh lời mời hoặc phân công. Liên hệ đã có lịch sử sẽ được giữ lại.",
+      "deleteLocked": "Liên hệ đã có lời mời hoặc lịch sử biểu diễn nên không thể xóa; hãy chuyển sang Ngừng hợp tác.",
+      "historyPreservedNote": "Liên hệ đã có lời mời/lịch sử sự kiện. Bạn có thể cập nhật thông tin hoặc chuyển trạng thái Ngừng hợp tác mà vẫn giữ toàn bộ lịch sử.",
+      "noAccountNote": "Nghệ sĩ không cần tài khoản hay cổng đăng nhập riêng; phản hồi biểu diễn được ghi nhận qua liên kết lời mời trong email.",
+      "pickerLabel": "Nghệ sĩ / ban nhạc",
+      "pickerPlaceholder": "Tìm hoặc thêm liên hệ nghệ sĩ",
+      "addInline": "Thêm liên hệ nghệ sĩ mới",
+      "editSelected": "Sửa liên hệ đã chọn",
+      "search": "Tìm liên hệ nghệ sĩ",
+      "searchPlaceholder": "Tìm mã NS, tên, email, SĐT hoặc thể loại",
+      "sortName": "Sắp xếp theo tên nghệ sĩ",
+      "empty": "Chưa có liên hệ nghệ sĩ phù hợp.",
+      "saved": "Đã lưu liên hệ nghệ sĩ.",
+      "deleted": "Đã xóa liên hệ nghệ sĩ.",
+      "noHistory": "Chưa có lịch sử",
+      "historySummary": "{{invitations}} lời mời · {{assignments}} phân công",
+      "kinds": {
+        "SOLO": "Solo",
+        "BAND": "Ban nhạc"
+      },
+      "status": {
+        "ACTIVE": "Hoạt động",
+        "INACTIVE": "Ngừng hợp tác"
+      },
+      "fields": {
+        "code": "Mã nghệ sĩ",
+        "stageName": "Tên nghệ sĩ / ban nhạc",
+        "kind": "Loại hình",
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "genre": "Thể loại",
+        "notes": "Ghi chú",
+        "status": "Trạng thái",
+        "history": "Lịch sử"
+      },
+      "placeholders": {
+        "stageName": "VD: Ban nhạc Mộc",
+        "email": "nghesi@example.com",
+        "phone": "0901234567",
+        "genre": "Acoustic, Indie...",
+        "notes": "Ghi chú thiết bị, khung giờ quen thuộc..."
+      },
+      "errors": {
+        "stageNameRequired": "Vui lòng nhập tên nghệ sĩ hoặc ban nhạc.",
+        "stageNameTooLong": "Tên nghệ sĩ tối đa 100 ký tự.",
+        "emailRequired": "Vui lòng nhập email liên hệ.",
+        "emailInvalid": "Email không đúng định dạng.",
+        "emailTooLong": "Email tối đa 100 ký tự.",
+        "phoneTooLong": "Số điện thoại tối đa 15 ký tự.",
+        "genreTooLong": "Thể loại tối đa 50 ký tự.",
+        "notesTooLong": "Ghi chú tối đa 1000 ký tự.",
+        "ARTIST_EMAIL_EXISTS": "Email này đã thuộc về một liên hệ nghệ sĩ khác.",
+        "ARTIST_HAS_HISTORY": "Không thể xóa liên hệ nghệ sĩ đã có lời mời hoặc lịch sử biểu diễn.",
+        "ARTIST_NOT_FOUND": "Không tìm thấy liên hệ nghệ sĩ."
+      }
+    }
+  },
   "language": "Ngôn ngữ",
   "eyebrow": "Cà phê · Âm nhạc · Học tập",
   "title": "Chào mừng đến CafeInn",
