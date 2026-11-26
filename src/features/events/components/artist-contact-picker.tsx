@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   ActionIcon,
   Badge,
@@ -46,12 +46,21 @@ export function ArtistContactPicker({
     opened: false,
     artist: null,
   });
+  const pickerContainerRef = useRef<HTMLDivElement>(null);
 
   const combobox = useCombobox({
     onDropdownClose: () => {
       combobox.resetSelectedOption();
     },
   });
+
+  const handleContainerBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    const nextTarget = event.relatedTarget as Node | null;
+    if (nextTarget && pickerContainerRef.current?.contains(nextTarget)) {
+      return;
+    }
+    combobox.closeDropdown();
+  };
 
   const activeList = useArtists(
     {
@@ -79,103 +88,106 @@ export function ArtistContactPicker({
 
   return (
     <Stack gap="xs">
-      <Combobox
-        store={combobox}
-        withinPortal={false}
-        onOptionSubmit={(optionValue) => {
-          if (optionValue === '__create__') {
-            combobox.closeDropdown();
-            setFormState({ opened: true, artist: null });
-            return;
-          }
-          const picked = items.find((item) => String(item.id) === optionValue) ?? null;
-          onChange(picked);
-          setSearch('');
-          combobox.closeDropdown();
-        }}
-      >
-        <Combobox.Target>
-          <InputBase
-            label={label ?? t('events.artists.pickerLabel')}
-            placeholder={placeholder ?? t('events.artists.pickerPlaceholder')}
-            value={combobox.dropdownOpened ? search : displayValue}
-            disabled={disabled}
-            error={error}
-            rightSection={
-              isLoadingSelected ? (
-                <Loader size={14} aria-label={t('auth.loading')} />
-              ) : selectedArtist && !disabled ? (
-                <ActionIcon
-                  variant="subtle"
-                  size="sm"
-                  aria-label={t('events.artists.editSelected')}
-                  title={t('events.artists.editSelected')}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setFormState({ opened: true, artist: selectedArtist });
-                  }}
-                >
-                  <CafeIcon name="pencil" size={14} />
-                </ActionIcon>
-              ) : (
-                <Combobox.Chevron />
-              )
+      <div ref={pickerContainerRef} onBlur={handleContainerBlur}>
+        <Combobox
+          store={combobox}
+          withinPortal={false}
+          onOptionSubmit={(optionValue) => {
+            if (optionValue === '__create__') {
+              combobox.closeDropdown();
+              setFormState({ opened: true, artist: null });
+              return;
             }
-            rightSectionPointerEvents={selectedArtist && !disabled && !isLoadingSelected ? 'auto' : 'none'}
-            onClick={() => combobox.openDropdown()}
-            onFocus={() => combobox.openDropdown()}
-            onChange={(event) => {
-              setSearch(event.currentTarget.value);
-              combobox.openDropdown();
-              combobox.updateSelectedOptionIndex();
-            }}
-          />
-        </Combobox.Target>
-
-        <Combobox.Dropdown>
-          <Combobox.Options>
-            {activeList.isPending ? (
-              <Combobox.Empty>{t('auth.loading')}</Combobox.Empty>
-            ) : items.length === 0 ? (
-              <Combobox.Empty>{t('events.artists.empty')}</Combobox.Empty>
-            ) : (
-              items.map((item) => (
-                <Combobox.Option key={item.id} value={String(item.id)} active={item.id === value}>
-                  <Group justify="space-between" wrap="nowrap" gap="xs">
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <Text size="sm" fw={500} truncate>
-                        {formatArtistCode(item.id)} · {item.stageName}
-                      </Text>
-                      <Text size="xs" c="dimmed" truncate>
-                        {item.email}
-                        {item.phone ? ` · ${item.phone}` : ''}
-                      </Text>
-                    </div>
-                    <Badge variant="light" size="sm" tt="none">
-                      {t(`events.artists.kinds.${item.kind}`)}
-                    </Badge>
-                  </Group>
-                </Combobox.Option>
-              ))
-            )}
-          </Combobox.Options>
-
-          <Combobox.Footer>
-            <Button
-              variant="subtle"
-              size="xs"
-              fullWidth
-              leftSection={<CafeIcon name="plus" size={14} />}
-              onClick={() => {
-                combobox.closeDropdown();
-                setFormState({ opened: true, artist: null });
+            const picked = items.find((item) => String(item.id) === optionValue) ?? null;
+            onChange(picked);
+            setSearch('');
+            combobox.closeDropdown();
+          }}
+        >
+          <Combobox.Target>
+            <InputBase
+              label={label ?? t('events.artists.pickerLabel')}
+              placeholder={placeholder ?? t('events.artists.pickerPlaceholder')}
+              value={combobox.dropdownOpened ? search : displayValue}
+              disabled={disabled}
+              error={error}
+              rightSection={
+                isLoadingSelected ? (
+                  <Loader size={14} aria-label={t('auth.loading')} />
+                ) : selectedArtist && !disabled ? (
+                  <ActionIcon
+                    variant="subtle"
+                    size="sm"
+                    aria-label={t('events.artists.editSelected')}
+                    title={t('events.artists.editSelected')}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setFormState({ opened: true, artist: selectedArtist });
+                    }}
+                  >
+                    <CafeIcon name="pencil" size={14} />
+                  </ActionIcon>
+                ) : (
+                  <Combobox.Chevron />
+                )
+              }
+              rightSectionPointerEvents={selectedArtist && !disabled && !isLoadingSelected ? 'auto' : 'none'}
+              onClick={() => combobox.openDropdown()}
+              onFocus={() => combobox.openDropdown()}
+              onChange={(event) => {
+                setSearch(event.currentTarget.value);
+                combobox.openDropdown();
+                combobox.updateSelectedOptionIndex();
               }}
-            >
-              {t('events.artists.addInline')}
-            </Button>
-          </Combobox.Footer>
-        </Combobox.Dropdown>
-      </Combobox>
+            />
+          </Combobox.Target>
+
+          <Combobox.Dropdown>
+            <Combobox.Options>
+              {activeList.isPending ? (
+                <Combobox.Empty>{t('auth.loading')}</Combobox.Empty>
+              ) : items.length === 0 ? (
+                <Combobox.Empty>{t('events.artists.empty')}</Combobox.Empty>
+              ) : (
+                items.map((item) => (
+                  <Combobox.Option key={item.id} value={String(item.id)} active={item.id === value}>
+                    <Group justify="space-between" wrap="nowrap" gap="xs">
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <Text size="sm" fw={500} truncate>
+                          {formatArtistCode(item.id)} · {item.stageName}
+                        </Text>
+                        <Text size="xs" c="dimmed" truncate>
+                          {item.email}
+                          {item.phone ? ` · ${item.phone}` : ''}
+                        </Text>
+                      </div>
+                      <Badge variant="light" size="sm" tt="none">
+                        {t(`events.artists.kinds.${item.kind}`)}
+                      </Badge>
+                    </Group>
+                  </Combobox.Option>
+                ))
+              )}
+            </Combobox.Options>
+
+            <Combobox.Footer>
+              <Button
+                variant="subtle"
+                size="xs"
+                fullWidth
+                leftSection={<CafeIcon name="plus" size={14} />}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  combobox.closeDropdown();
+                  setFormState({ opened: true, artist: null });
+                }}
+              >
+                {t('events.artists.addInline')}
+              </Button>
+            </Combobox.Footer>
+          </Combobox.Dropdown>
+        </Combobox>
+      </div>
 
       <ArtistContactInlineForm
         opened={formState.opened}
