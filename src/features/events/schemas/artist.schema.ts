@@ -90,3 +90,32 @@ export function toArtistPayload(values: ArtistFormValues) {
     status: values.status,
   };
 }
+
+export type ArtistPayload = ReturnType<typeof toArtistPayload>;
+export type ArtistPatchPayload = Partial<ArtistPayload>;
+
+export function artistToFormValues(artist: Artist): ArtistFormValues {
+  return {
+    stageName: artist.stageName,
+    kind: artist.kind,
+    email: artist.email,
+    phone: artist.phone ?? '',
+    genre: artist.genre ?? '',
+    notes: artist.notes ?? '',
+    status: artist.status,
+  };
+}
+
+/** Builds a minimal PATCH payload containing only fields whose normalized values changed. */
+export function buildArtistPatchPayload(
+  baseline: ArtistPayload,
+  next: ArtistPayload,
+): ArtistPatchPayload {
+  const patch: ArtistPatchPayload = {};
+  (Object.keys(next) as Array<keyof ArtistPayload>).forEach((key) => {
+    if (next[key] !== baseline[key]) {
+      (patch as Record<string, unknown>)[key] = next[key];
+    }
+  });
+  return patch;
+}

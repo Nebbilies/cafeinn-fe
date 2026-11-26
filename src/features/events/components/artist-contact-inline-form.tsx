@@ -15,11 +15,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import { CafeIcon } from '@/shared/ui/cafe-icon';
 import { artistErrorKey } from '../api/artists.api';
-import { useCreateArtist, useUpdateArtist } from '../hooks/use-artists';
+import { useArtistDetail, useCreateArtist, useUpdateArtist } from '../hooks/use-artists';
 import {
   artistFormSchema,
   artistKinds,
   artistStatuses,
+  artistToFormValues,
+  buildArtistPatchPayload,
   formatArtistCode,
   toArtistPayload,
   type Artist,
@@ -102,9 +104,21 @@ function ArtistFormBody({
     setFieldErrors({});
     const payload = toArtistPayload(parsed.data);
     try {
-      const saved = artist
-        ? await updateMutation.mutateAsync({ id: artist.id, body: payload })
-        : await createMutation.mutateAsync(payload);
+      if (artist) {
+        const baseline = toArtistPayload(artistToFormValues(artist));
+        const patch = buildArtistPatchPayload(baseline, payload);
+        if (Object.keys(patch).length === 0) {
+          onClose();
+          return;
+        }
+        const saved = await updateMutation.mutateAsync({ id: artist.id, body: patch });
+        if (!mountedRef.current) return;
+        onSaved?.(saved);
+        onClose();
+        return;
+      }
+
+      const saved = await createMutation.mutateAsync(payload);
       if (!mountedRef.current) return;
       onSaved?.(saved);
       onClose();
@@ -233,6 +247,54 @@ function ArtistFormBody({
   );
 }
 
+function ArtistEditFormLoader({
+  artistId,
+  onClose,
+  onSaved,
+  onPendingChange,
+}: {
+  artistId: number;
+  onClose: () => void;
+  onSaved?: (artist: Artist) => void;
+  onPendingChange?: (pending: boolean) => void;
+}) {
+  const { t } = useTranslation();
+  const detail = useArtistDetail(artistId);
+
+  if (detail.isPending) {
+    return (
+      <Text role="status" size="sm" c="dimmed" py="md">
+        {t('auth.loading')}
+      </Text>
+    );
+  }
+
+  if (detail.error || !detail.data) {
+    return (
+      <Stack gap="md">
+        <Alert color="error" role="alert" icon={<CafeIcon name="info" />}>
+          {t(artistErrorKey(detail.error), { defaultValue: t('auth.errors.generic') })}
+        </Alert>
+        <Group justify="flex-end">
+          <Button variant="default" size="sm" onClick={onClose}>
+            {t('foundations.cancel')}
+          </Button>
+        </Group>
+      </Stack>
+    );
+  }
+
+  return (
+    <ArtistFormBody
+      key={`edit-${detail.data.id}-${detail.dataUpdatedAt}`}
+      artist={detail.data}
+      onClose={onClose}
+      onSaved={onSaved}
+      onPendingChange={onPendingChange}
+    />
+  );
+}
+
 /**
  * Reusable inline modal form for creating or editing an artist/band contact within events.
  */
@@ -258,15 +320,24 @@ export function ArtistContactInlineForm({
       title={t(artist ? 'events.artists.editTitle' : 'events.artists.createTitle')}
       closeButtonProps={{ 'aria-label': t('auth.closeDialog'), disabled: saving }}
     >
-      {opened && (
-        <ArtistFormBody
-          key={artist ? `edit-${artist.id}` : 'create'}
-          artist={artist}
-          onClose={onClose}
-          onSaved={onSaved}
-          onPendingChange={setSaving}
-        />
-      )}
+      {opened &&
+        (artist ? (
+          <ArtistEditFormLoader
+            key={`loader-${artist.id}`}
+            artistId={artist.id}
+            onClose={onClose}
+            onSaved={onSaved}
+            onPendingChange={setSaving}
+          />
+        ) : (
+          <ArtistFormBody
+            key="create"
+            artist={null}
+            onClose={onClose}
+            onSaved={onSaved}
+            onPendingChange={setSaving}
+          />
+        ))}
     </Modal>
   );
 }

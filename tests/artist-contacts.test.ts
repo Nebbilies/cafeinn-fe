@@ -3,6 +3,8 @@ import test from 'node:test';
 import {
   artistFormSchema,
   artistPageSchema,
+  artistToFormValues,
+  buildArtistPatchPayload,
   canDeleteArtist,
   formatArtistCode,
   toArtistPayload,
@@ -96,4 +98,40 @@ test('canDeleteArtist respects event history per QD12 and artistPageSchema parse
     pagination: { page: 1, pageSize: 10, totalItems: 1, totalPages: 1 },
   });
   assert.equal(parsed.items[0]?.hasHistory, true);
+});
+
+test('buildArtistPatchPayload sends only modified fields so concurrent edits to other fields are preserved', () => {
+  const baseline = toArtistPayload(
+    artistToFormValues({
+      id: 7,
+      stageName: 'Ban nhạc Mộc',
+      kind: 'BAND',
+      email: 'moc@example.com',
+      phone: '0901234567',
+      genre: 'Acoustic',
+      notes: 'Ghi chú cũ',
+      status: 'ACTIVE',
+      invitationCount: 0,
+      assignmentCount: 0,
+      hasHistory: false,
+    }),
+  );
+
+  const unchanged = buildArtistPatchPayload(baseline, { ...baseline });
+  assert.deepEqual(unchanged, {});
+
+  const notesOnly = buildArtistPatchPayload(
+    baseline,
+    toArtistPayload({
+      stageName: '  Ban nhạc Mộc ',
+      kind: 'BAND',
+      email: 'MOC@Example.com',
+      phone: '0901234567',
+      genre: 'Acoustic',
+      notes: 'Ghi chú mới',
+      status: 'ACTIVE',
+    }),
+  );
+  assert.deepEqual(notesOnly, { notes: 'Ghi chú mới' });
+  assert.equal('phone' in notesOnly, false);
 });
