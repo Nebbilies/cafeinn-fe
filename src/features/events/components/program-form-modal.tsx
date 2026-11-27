@@ -474,7 +474,7 @@ function ProgramEditFormLoader({
     );
   }
 
-  if (detail.error || !detail.data) {
+  if (!detail.data || (!initialSettled && detail.error)) {
     return (
       <Stack gap="md">
         <Alert color="error" role="alert" icon={<CafeIcon name="info" />}>
@@ -500,13 +500,34 @@ function ProgramEditFormLoader({
   }
 
   return (
-    <ProgramFormBody
-      key={`edit-${detail.data.id}`}
-      program={detail.data}
-      onClose={onClose}
-      onSaved={onSaved}
-      onPendingChange={onPendingChange}
-    />
+    <Stack gap="md">
+      {detail.error && (
+        <Alert color="error" role="alert" icon={<CafeIcon name="info" />}>
+          <Group justify="space-between" align="center" gap="sm" wrap="wrap">
+            <Text size="sm">
+              {t(programErrorKey(detail.error), { defaultValue: t('auth.errors.generic') })}
+            </Text>
+            <Button
+              variant="default"
+              size="xs"
+              loading={detail.isFetching}
+              onClick={() => {
+                void detail.refetch();
+              }}
+            >
+              {t('retry')}
+            </Button>
+          </Group>
+        </Alert>
+      )}
+      <ProgramFormBody
+        key={`edit-${detail.data.id}`}
+        program={detail.data}
+        onClose={onClose}
+        onSaved={onSaved}
+        onPendingChange={onPendingChange}
+      />
+    </Stack>
   );
 }
 
