@@ -460,8 +460,13 @@ function ProgramEditFormLoader({
 }) {
   const { t } = useTranslation();
   const detail = useProgramDetail(programId);
+  const [initialSettled, setInitialSettled] = useState(false);
 
-  if (detail.isPending) {
+  if (!initialSettled && !detail.isFetching && detail.data && !detail.error) {
+    setInitialSettled(true);
+  }
+
+  if (!initialSettled && (detail.isPending || detail.isFetching)) {
     return (
       <Text role="status" size="sm" c="dimmed" py="md">
         {t('auth.loading')}
