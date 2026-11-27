@@ -260,8 +260,13 @@ function ArtistEditFormLoader({
 }) {
   const { t } = useTranslation();
   const detail = useArtistDetail(artistId);
+  const [initialSettled, setInitialSettled] = useState(false);
 
-  if (detail.isPending) {
+  if (!initialSettled && !detail.isFetching && detail.data && !detail.error) {
+    setInitialSettled(true);
+  }
+
+  if (!initialSettled && (detail.isPending || detail.isFetching)) {
     return (
       <Text role="status" size="sm" c="dimmed" py="md">
         {t('auth.loading')}
@@ -269,13 +274,23 @@ function ArtistEditFormLoader({
     );
   }
 
-  if (detail.error || !detail.data) {
+  if (!detail.data || (!initialSettled && detail.error)) {
     return (
       <Stack gap="md">
         <Alert color="error" role="alert" icon={<CafeIcon name="info" />}>
           {t(artistErrorKey(detail.error), { defaultValue: t('auth.errors.generic') })}
         </Alert>
-        <Group justify="flex-end">
+        <Group justify="flex-end" gap="sm">
+          <Button
+            variant="default"
+            size="sm"
+            loading={detail.isFetching}
+            onClick={() => {
+              void detail.refetch();
+            }}
+          >
+            {t('retry')}
+          </Button>
           <Button variant="default" size="sm" onClick={onClose}>
             {t('foundations.cancel')}
           </Button>
@@ -285,13 +300,34 @@ function ArtistEditFormLoader({
   }
 
   return (
-    <ArtistFormBody
-      key={`edit-${detail.data.id}`}
-      artist={detail.data}
-      onClose={onClose}
-      onSaved={onSaved}
-      onPendingChange={onPendingChange}
-    />
+    <Stack gap="md">
+      {detail.error && (
+        <Alert color="error" role="alert" icon={<CafeIcon name="info" />}>
+          <Group justify="space-between" align="center" gap="sm" wrap="wrap">
+            <Text size="sm">
+              {t(artistErrorKey(detail.error), { defaultValue: t('auth.errors.generic') })}
+            </Text>
+            <Button
+              variant="default"
+              size="xs"
+              loading={detail.isFetching}
+              onClick={() => {
+                void detail.refetch();
+              }}
+            >
+              {t('retry')}
+            </Button>
+          </Group>
+        </Alert>
+      )}
+      <ArtistFormBody
+        key={`edit-${detail.data.id}`}
+        artist={detail.data}
+        onClose={onClose}
+        onSaved={onSaved}
+        onPendingChange={onPendingChange}
+      />
+    </Stack>
   );
 }
 
