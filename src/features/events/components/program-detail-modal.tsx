@@ -1,10 +1,26 @@
 'use client';
 
-import { Alert, Anchor, Badge, Box, Button, Divider, Group, Modal, Stack, Text } from '@mantine/core';
+import { useState } from 'react';
+import {
+  Alert,
+  Anchor,
+  Badge,
+  Box,
+  Button,
+  Divider,
+  Group,
+  Modal,
+  Paper,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { CafeIcon } from '@/shared/ui/cafe-icon';
+import { artistErrorKey } from '../api/artists.api';
 import { programErrorKey } from '../api/programs.api';
+import { useArtistDetail } from '../hooks/use-artists';
 import { useProgramDetail } from '../hooks/use-programs';
+import { formatArtistCode } from '../schemas/artist.schema';
 import {
   canEditOrDeleteDraft,
   formatProgramCode,
@@ -15,6 +31,7 @@ import {
   type Program,
   type ProgramDisplayState,
 } from '../schemas/program.schema';
+import { ArtistContactPicker } from './artist-contact-picker';
 
 export function displayStateColor(state: ProgramDisplayState): string {
   switch (state) {
@@ -31,6 +48,128 @@ export function displayStateColor(state: ProgramDisplayState): string {
   }
 }
 
+function ProgramArtistContactSection({
+  onModalOpenChange,
+}: {
+  onModalOpenChange?: (opened: boolean) => void;
+}) {
+  const { t } = useTranslation();
+  const [selectedArtistId, setSelectedArtistId] = useState<number | null>(null);
+  const selectedDetail = useArtistDetail(selectedArtistId);
+  const selectedArtist = selectedDetail.data ?? null;
+
+  return (
+    <Stack gap="sm">
+      <Box>
+        <Text fw={600} size="sm">
+          {t('events.programs.workspaceTitle')}
+        </Text>
+        <Text size="xs" c="dimmed" mt={2}>
+          {t('events.programs.workspaceNote')}
+        </Text>
+      </Box>
+
+      <ArtistContactPicker
+        value={selectedArtistId}
+        onChange={(artist) => setSelectedArtistId(artist?.id ?? null)}
+        onModalOpenChange={onModalOpenChange}
+      />
+
+      {selectedArtistId !== null && selectedDetail.isPending && (
+        <Text size="sm" c="dimmed" role="status">
+          {t('auth.loading')}
+        </Text>
+      )}
+
+      {selectedArtistId !== null && selectedDetail.error && (
+        <Alert color="error" role="alert" icon={<CafeIcon name="info" />}>
+          <Stack gap="xs">
+            <Text size="sm">
+              {t(artistErrorKey(selectedDetail.error), {
+                defaultValue: t('auth.errors.generic'),
+              })}
+            </Text>
+            <Group gap="xs">
+              <Button
+                variant="default"
+                size="xs"
+                loading={selectedDetail.isFetching}
+                onClick={() => {
+                  void selectedDetail.refetch();
+                }}
+              >
+                {t('retry')}
+              </Button>
+              <Button
+                variant="subtle"
+                size="xs"
+                onClick={() => setSelectedArtistId(null)}
+              >
+                {t('events.programs.clearSelection')}
+              </Button>
+            </Group>
+          </Stack>
+        </Alert>
+      )}
+
+      {selectedArtist && (
+        <Paper withBorder p="sm" radius="sm">
+          <Stack gap="xs">
+            <Group justify="space-between" align="flex-start" wrap="wrap">
+              <Box style={{ minWidth: 0, flex: 1 }}>
+                <Text size="xs" c="dimmed">
+                  {t('events.programs.selectedTitle')}
+                </Text>
+                <Group gap="xs" mt={2} wrap="wrap">
+                  <Text fw={600} size="sm">
+                    {formatArtistCode(selectedArtist.id)} · {selectedArtist.stageName}
+                  </Text>
+                  <Badge variant="light" size="sm" tt="none">
+                    {t(`events.artists.kinds.${selectedArtist.kind}`)}
+                  </Badge>
+                  <Badge
+                    variant="dot"
+                    size="sm"
+                    color={selectedArtist.status === 'ACTIVE' ? 'success' : 'neutral'}
+                  >
+                    {t(`events.artists.status.${selectedArtist.status}`)}
+                  </Badge>
+                </Group>
+              </Box>
+              <Button variant="subtle" size="xs" onClick={() => setSelectedArtistId(null)}>
+                {t('events.programs.clearSelection')}
+              </Button>
+            </Group>
+
+            <Group gap="md" wrap="wrap">
+              <Text size="xs">
+                <Text span c="dimmed">
+                  {t('events.artists.fields.email')}:{' '}
+                </Text>
+                {selectedArtist.email}
+              </Text>
+              <Text size="xs">
+                <Text span c="dimmed">
+                  {t('events.artists.fields.phone')}:{' '}
+                </Text>
+                {selectedArtist.phone || t('auth.notProvided')}
+              </Text>
+              {selectedArtist.genre && (
+                <Text size="xs">
+                  <Text span c="dimmed">
+                    {t('events.artists.fields.genre')}:{' '}
+                  </Text>
+                  {selectedArtist.genre}
+                </Text>
+              )}
+            </Group>
+          </Stack>
+        </Paper>
+      )}
+    </Stack>
+  );
+}
+
 export function ProgramDetailModal({
   programId,
   onClose,
@@ -42,6 +181,7 @@ export function ProgramDetailModal({
 }) {
   const { t } = useTranslation();
   const detail = useProgramDetail(programId);
+  const [nestedModalOpen, setNestedModalOpen] = useState(false);
   const program = detail.data;
   const displayState = program ? getProgramDisplayState(program) : null;
   const editable = program ? canEditOrDeleteDraft(program) : false;
@@ -49,7 +189,11 @@ export function ProgramDetailModal({
   return (
     <Modal
       opened={programId !== null}
-      onClose={onClose}
+      onClose={() => {
+        if (!nestedModalOpen) onClose();
+      }}
+      closeOnEscape={!nestedModalOpen}
+      closeOnClickOutside={!nestedModalOpen}
       size={600}
       centered
       title={t('events.programs.detailTitle')}
@@ -230,6 +374,13 @@ export function ProgramDetailModal({
               {t('events.programs.recurringFreeNote')}
             </Alert>
           )}
+
+          <Divider />
+
+          <ProgramArtistContactSection
+            key={`artist-section-${program.id}`}
+            onModalOpenChange={setNestedModalOpen}
+          />
 
           <Group justify="flex-end" gap="sm">
             {editable && (

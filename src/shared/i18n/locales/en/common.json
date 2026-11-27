@@ -222,7 +222,16 @@
     "confirm": "Confirm"
   },
   "events": {
+    "tabs": {
+      "programs": "Event programs",
+      "artists": "Artist contacts"
+    },
     "programs": {
+      "workspaceTitle": "Artist contact for this event",
+      "workspaceNote": "Search active artist contacts, edit selected details, or add a new contact inline within this event program.",
+      "selectedTitle": "Selected artist contact for this event",
+      "selectedEmpty": "No artist selected yet. Use the picker above to choose an existing contact or create one inline.",
+      "clearSelection": "Clear selection",
       "createSpecial": "Create special program",
       "createRecurring": "Create recurring batch",
       "editTitle": "Edit draft program",
@@ -335,6 +344,67 @@
         "PROGRAM_CHANGE_REQUIRES_COORDINATION": "Published programs or drafts with invitations, schedules, bookings, or attendance cannot be edited or deleted directly.",
         "PREVIEW_STALE": "Area availability changed and a conflict occurred. Preview again before creating.",
         "RECURRING_BATCH_NOT_FOUND": "Recurring batch not found."
+      }
+    },
+    "artists": {
+      "createTitle": "Add artist contact",
+      "editTitle": "Edit artist contact",
+      "detailTitle": "Artist contact details",
+      "deleteTitle": "Delete artist contact?",
+      "deleteNotice": "Only unused contacts without invitations or assignments can be deleted.",
+      "deleteLocked": "This contact has invitation or performance history and cannot be deleted; switch status to Inactive instead.",
+      "historyPreservedNote": "This contact has event history. You can update their details or mark them Inactive while preserving all records.",
+      "noAccountNote": "Artists do not need a staff account or portal; performance responses are handled through email invitation links.",
+      "pickerLabel": "Artist / band",
+      "pickerPlaceholder": "Search or add an artist contact",
+      "addInline": "Add new artist contact",
+      "editSelected": "Edit selected contact",
+      "search": "Search artist contacts",
+      "searchPlaceholder": "Search code, name, email, phone, or genre",
+      "sortName": "Sort by artist name",
+      "empty": "No matching artist contacts.",
+      "saved": "Artist contact saved.",
+      "deleted": "Artist contact deleted.",
+      "noHistory": "No history yet",
+      "historySummary": "{{invitations}} invitations · {{assignments}} assignments",
+      "kinds": {
+        "SOLO": "Solo",
+        "BAND": "Band"
+      },
+      "status": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive"
+      },
+      "fields": {
+        "code": "Artist code",
+        "stageName": "Artist / band name",
+        "kind": "Kind",
+        "email": "Email",
+        "phone": "Phone",
+        "genre": "Genre",
+        "notes": "Notes",
+        "status": "Status",
+        "history": "History"
+      },
+      "placeholders": {
+        "stageName": "e.g. Mộc Acoustic Band",
+        "email": "artist@example.com",
+        "phone": "0901234567",
+        "genre": "Acoustic, Indie...",
+        "notes": "Equipment notes, preferred setup..."
+      },
+      "errors": {
+        "stageNameRequired": "Enter an artist or band name.",
+        "stageNameTooLong": "Artist name can be at most 100 characters.",
+        "emailRequired": "Enter a contact email.",
+        "emailInvalid": "Enter a valid email address.",
+        "emailTooLong": "Email can be at most 100 characters.",
+        "phoneTooLong": "Phone number can be at most 15 characters.",
+        "genreTooLong": "Genre can be at most 50 characters.",
+        "notesTooLong": "Notes can be at most 1000 characters.",
+        "ARTIST_EMAIL_EXISTS": "This email is already assigned to another artist contact.",
+        "ARTIST_HAS_HISTORY": "Cannot delete an artist contact that has invitation or schedule history.",
+        "ARTIST_NOT_FOUND": "Artist contact not found."
       }
     }
   },
