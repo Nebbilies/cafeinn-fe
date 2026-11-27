@@ -56,6 +56,7 @@ function RecurringBatchBody({
   const previewMutation = usePreviewRecurringBatch();
   const createMutation = useCreateRecurringBatch();
   const mountedRef = useRef(true);
+  const previewRequestIdRef = useRef(0);
 
   const [areaId, setAreaId] = useState<number>(DEFAULT_ACOUSTIC_AREA_ID);
   const [name, setName] = useState('');
@@ -94,6 +95,7 @@ function RecurringBatchBody({
   }, [pending, onPendingChange]);
 
   const invalidatePreview = () => {
+    previewRequestIdRef.current += 1;
     if (preview) {
       setPreview(null);
       setPreviewInput(null);
@@ -128,10 +130,11 @@ function RecurringBatchBody({
 
     setFieldErrors({});
     createMutation.reset();
+    const requestId = ++previewRequestIdRef.current;
     const input = toRecurringBatchInput(parsed.data);
     try {
       const result = await previewMutation.mutateAsync(input);
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || previewRequestIdRef.current !== requestId) return;
       setPreview(result);
       setPreviewInput(input);
       setSelectedDates(
