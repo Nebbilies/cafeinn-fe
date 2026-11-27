@@ -48,7 +48,11 @@ export function displayStateColor(state: ProgramDisplayState): string {
   }
 }
 
-function ProgramArtistContactSection() {
+function ProgramArtistContactSection({
+  onModalOpenChange,
+}: {
+  onModalOpenChange?: (opened: boolean) => void;
+}) {
   const { t } = useTranslation();
   const [selectedArtistId, setSelectedArtistId] = useState<number | null>(null);
   const selectedDetail = useArtistDetail(selectedArtistId);
@@ -68,6 +72,7 @@ function ProgramArtistContactSection() {
       <ArtistContactPicker
         value={selectedArtistId}
         onChange={(artist) => setSelectedArtistId(artist?.id ?? null)}
+        onModalOpenChange={onModalOpenChange}
       />
 
       {selectedArtistId !== null && selectedDetail.isPending && (
@@ -176,6 +181,7 @@ export function ProgramDetailModal({
 }) {
   const { t } = useTranslation();
   const detail = useProgramDetail(programId);
+  const [nestedModalOpen, setNestedModalOpen] = useState(false);
   const program = detail.data;
   const displayState = program ? getProgramDisplayState(program) : null;
   const editable = program ? canEditOrDeleteDraft(program) : false;
@@ -183,7 +189,11 @@ export function ProgramDetailModal({
   return (
     <Modal
       opened={programId !== null}
-      onClose={onClose}
+      onClose={() => {
+        if (!nestedModalOpen) onClose();
+      }}
+      closeOnEscape={!nestedModalOpen}
+      closeOnClickOutside={!nestedModalOpen}
       size={600}
       centered
       title={t('events.programs.detailTitle')}
@@ -367,7 +377,10 @@ export function ProgramDetailModal({
 
           <Divider />
 
-          <ProgramArtistContactSection key={`artist-section-${program.id}`} />
+          <ProgramArtistContactSection
+            key={`artist-section-${program.id}`}
+            onModalOpenChange={setNestedModalOpen}
+          />
 
           <Group justify="flex-end" gap="sm">
             {editable && (

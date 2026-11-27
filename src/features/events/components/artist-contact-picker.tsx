@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActionIcon,
   Badge,
@@ -26,6 +26,7 @@ type ArtistContactPickerProps = {
   placeholder?: string;
   error?: string;
   disabled?: boolean;
+  onModalOpenChange?: (opened: boolean) => void;
 };
 
 /**
@@ -39,6 +40,7 @@ export function ArtistContactPicker({
   placeholder,
   error,
   disabled = false,
+  onModalOpenChange,
 }: ArtistContactPickerProps) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
@@ -47,6 +49,16 @@ export function ArtistContactPicker({
     artist: null,
   });
   const pickerContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    onModalOpenChange?.(formState.opened);
+  }, [formState.opened, onModalOpenChange]);
+
+  useEffect(() => {
+    return () => {
+      onModalOpenChange?.(false);
+    };
+  }, [onModalOpenChange]);
 
   const combobox = useCombobox({
     onDropdownClose: () => {
