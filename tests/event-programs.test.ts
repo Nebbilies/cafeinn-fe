@@ -5,10 +5,12 @@ import {
   canEditOrDeleteDraft,
   formatProgramCode,
   getProgramDisplayState,
+  isValidCalendarDate,
   programPageSchema,
   programToRecurringFormValues,
   programToSpecialFormValues,
   recurringBatchFormSchema,
+  recurringProgramEditSchema,
   specialProgramFormSchema,
   toCreateSpecialProgramPayload,
   toEditableSnapshotFromRecurring,
@@ -221,4 +223,73 @@ test('canEditOrDeleteDraft and programPageSchema match backend contract', () => 
     pagination: { page: 1, pageSize: 10, totalItems: 1, totalPages: 1 },
   });
   assert.equal(parsed.items[0]?.id, 12);
+});
+
+test('calendar date validation rejects impossible dates and accepts valid leap dates across schemas', () => {
+  assert.equal(isValidCalendarDate('2028-02-29'), true);
+  assert.equal(isValidCalendarDate('2026-02-29'), false);
+  assert.equal(isValidCalendarDate('2026-02-30'), false);
+  assert.equal(isValidCalendarDate('2026-13-01'), false);
+  assert.equal(isValidCalendarDate('2026-04-31'), false);
+
+  assert.equal(
+    recurringProgramEditSchema.safeParse({
+      areaId: 2,
+      name: 'Leap Night',
+      description: 'Valid leap date',
+      coverImageUrl: '',
+      eventDate: '2028-02-29',
+      startTime: '19:00',
+      endTime: '21:00',
+    }).success,
+    true,
+  );
+
+  assert.equal(
+    recurringProgramEditSchema.safeParse({
+      areaId: 2,
+      name: 'Impossible Date',
+      description: 'Should fail',
+      coverImageUrl: '',
+      eventDate: '2026-02-30',
+      startTime: '19:00',
+      endTime: '21:00',
+    }).success,
+    false,
+  );
+
+  assert.equal(
+    specialProgramFormSchema.safeParse({
+      areaId: 2,
+      name: 'Bad Deadline Date',
+      description: 'Should fail',
+      coverImageUrl: '',
+      eventDate: '2026-03-05',
+      startTime: '19:00',
+      endTime: '21:00',
+      capacityLimit: 30,
+      surchargePerPerson: 0,
+      registrationDeadlineDate: '2026-02-30',
+      registrationDeadlineTime: '18:00',
+      cancellationDeadlineDate: '2026-03-05',
+      cancellationDeadlineTime: '17:00',
+      holdMinutes: 30,
+    }).success,
+    false,
+  );
+
+  assert.equal(
+    recurringBatchFormSchema.safeParse({
+      areaId: 2,
+      name: 'Bad Batch Date',
+      description: 'Should fail',
+      coverImageUrl: '',
+      fromDate: '2026-02-29',
+      toDate: '2026-03-10',
+      weekdays: ['FRI'],
+      startTime: '19:00',
+      endTime: '21:00',
+    }).success,
+    false,
+  );
 });

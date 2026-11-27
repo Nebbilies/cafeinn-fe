@@ -20,6 +20,25 @@ export type ProgramDisplayState = 'DRAFT' | 'CANCELLED' | 'UPCOMING' | 'ONGOING'
 const calendarDatePattern = /^\d{4}-\d{2}-\d{2}$/;
 const localTimePattern = /^([01]\d|2[0-3]):[0-5]\d$/;
 
+export function isValidCalendarDate(value: string): boolean {
+  if (!calendarDatePattern.test(value)) return false;
+  const [yearStr, monthStr, dayStr] = value.split('-');
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return false;
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
+}
+
+export const calendarDateSchema = z
+  .string()
+  .refine(isValidCalendarDate, 'events.programs.errors.dateRequired');
+
 export const specialEventSchema = z.object({
   capacityLimit: z.number().int().min(1),
   surchargePerPerson: z.number().int().min(0),
@@ -130,7 +149,7 @@ const baseProgramFields = {
     .string()
     .trim()
     .refine(isValidCoverUrl, 'events.programs.errors.coverImageUrlInvalid'),
-  eventDate: z.string().regex(calendarDatePattern, 'events.programs.errors.dateRequired'),
+  eventDate: calendarDateSchema,
   startTime: z.string().regex(localTimePattern, 'events.programs.errors.timeRequired'),
   endTime: z.string().regex(localTimePattern, 'events.programs.errors.timeRequired'),
 };
@@ -157,15 +176,11 @@ export const specialProgramFormSchema = z
       .int('events.programs.errors.surchargeInvalid')
       .min(0, 'events.programs.errors.surchargeInvalid')
       .max(4_294_967_295, 'events.programs.errors.surchargeInvalid'),
-    registrationDeadlineDate: z
-      .string()
-      .regex(calendarDatePattern, 'events.programs.errors.deadlineRequired'),
+    registrationDeadlineDate: calendarDateSchema,
     registrationDeadlineTime: z
       .string()
       .regex(localTimePattern, 'events.programs.errors.deadlineRequired'),
-    cancellationDeadlineDate: z
-      .string()
-      .regex(calendarDatePattern, 'events.programs.errors.deadlineRequired'),
+    cancellationDeadlineDate: calendarDateSchema,
     cancellationDeadlineTime: z
       .string()
       .regex(localTimePattern, 'events.programs.errors.deadlineRequired'),
@@ -183,26 +198,31 @@ export const specialProgramFormSchema = z
         message: 'events.programs.errors.endBeforeStart',
       });
     }
+    if (!isValidCalendarDate(values.eventDate)) return;
     const startsAtMs = Date.parse(toVietnamIso(values.eventDate, values.startTime));
-    const regMs = Date.parse(
-      toVietnamIso(values.registrationDeadlineDate, values.registrationDeadlineTime),
-    );
-    const cancelMs = Date.parse(
-      toVietnamIso(values.cancellationDeadlineDate, values.cancellationDeadlineTime),
-    );
-    if (!Number.isNaN(startsAtMs) && !Number.isNaN(regMs) && regMs > startsAtMs) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['registrationDeadlineDate'],
-        message: 'events.programs.errors.deadlineAfterStart',
-      });
+    if (isValidCalendarDate(values.registrationDeadlineDate)) {
+      const regMs = Date.parse(
+        toVietnamIso(values.registrationDeadlineDate, values.registrationDeadlineTime),
+      );
+      if (!Number.isNaN(startsAtMs) && !Number.isNaN(regMs) && regMs > startsAtMs) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['registrationDeadlineDate'],
+          message: 'events.programs.errors.deadlineAfterStart',
+        });
+      }
     }
-    if (!Number.isNaN(startsAtMs) && !Number.isNaN(cancelMs) && cancelMs > startsAtMs) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['cancellationDeadlineDate'],
-        message: 'events.programs.errors.deadlineAfterStart',
-      });
+    if (isValidCalendarDate(values.cancellationDeadlineDate)) {
+      const cancelMs = Date.parse(
+        toVietnamIso(values.cancellationDeadlineDate, values.cancellationDeadlineTime),
+      );
+      if (!Number.isNaN(startsAtMs) && !Number.isNaN(cancelMs) && cancelMs > startsAtMs) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['cancellationDeadlineDate'],
+          message: 'events.programs.errors.deadlineAfterStart',
+        });
+      }
     }
   });
 
@@ -214,8 +234,8 @@ export const recurringBatchFormSchema = z
     name: baseProgramFields.name,
     description: baseProgramFields.description,
     coverImageUrl: baseProgramFields.coverImageUrl,
-    fromDate: z.string().regex(calendarDatePattern, 'events.programs.errors.dateRequired'),
-    toDate: z.string().regex(calendarDatePattern, 'events.programs.errors.dateRequired'),
+    fromDate: calendarDateSchema,
+    toDate: calendarDateSchema,
     weekdays: z.array(z.enum(weekdays)).min(1, 'events.programs.errors.weekdaysRequired'),
     startTime: baseProgramFields.startTime,
     endTime: baseProgramFields.endTime,
@@ -227,6 +247,9 @@ export const recurringBatchFormSchema = z
         path: ['endTime'],
         message: 'events.programs.errors.endBeforeStart',
       });
+    }
+    if (!isValidCalendarDate(values.fromDate) || !isValidCalendarDate(values.toDate)) {
+      return;
     }
     if (values.fromDate > values.toDate) {
       ctx.addIssue({
