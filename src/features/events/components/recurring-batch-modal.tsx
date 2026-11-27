@@ -162,6 +162,7 @@ function RecurringBatchBody({
     }
   };
 
+  const creating = createMutation.isPending;
   const validDates =
     preview?.occurrences
       .filter((item) => item.conflictProgramIds.length === 0)
@@ -184,6 +185,7 @@ function RecurringBatchBody({
           label={t('events.programs.fields.name')}
           placeholder={t('events.programs.placeholders.name')}
           required
+          disabled={creating}
           maxLength={150}
           value={name}
           error={fieldErrors.name ? t(fieldErrors.name) : undefined}
@@ -198,6 +200,7 @@ function RecurringBatchBody({
           label={t('events.programs.fields.description')}
           placeholder={t('events.programs.placeholders.description')}
           required
+          disabled={creating}
           minRows={2}
           autosize
           value={description}
@@ -212,6 +215,7 @@ function RecurringBatchBody({
           <NumberInput
             label={t('events.programs.fields.areaId')}
             required
+            disabled={creating}
             min={1}
             allowDecimal={false}
             value={areaId}
@@ -227,6 +231,7 @@ function RecurringBatchBody({
           <TextInput
             label={t('events.programs.fields.coverImageUrl')}
             placeholder={t('events.programs.placeholders.coverImageUrl')}
+            disabled={creating}
             value={coverImageUrl}
             error={fieldErrors.coverImageUrl ? t(fieldErrors.coverImageUrl) : undefined}
             onChange={(e) => {
@@ -241,6 +246,7 @@ function RecurringBatchBody({
             type="date"
             label={t('events.programs.fields.fromDate')}
             required
+            disabled={creating}
             value={fromDate}
             error={fieldErrors.fromDate ? t(fieldErrors.fromDate) : undefined}
             onChange={(e) => {
@@ -252,6 +258,7 @@ function RecurringBatchBody({
             type="date"
             label={t('events.programs.fields.toDate')}
             required
+            disabled={creating}
             value={toDate}
             error={fieldErrors.toDate ? t(fieldErrors.toDate) : undefined}
             onChange={(e) => {
@@ -266,6 +273,7 @@ function RecurringBatchBody({
             type="time"
             label={t('events.programs.fields.startTime')}
             required
+            disabled={creating}
             value={startTime}
             error={fieldErrors.startTime ? t(fieldErrors.startTime) : undefined}
             onChange={(e) => {
@@ -277,6 +285,7 @@ function RecurringBatchBody({
             type="time"
             label={t('events.programs.fields.endTime')}
             required
+            disabled={creating}
             value={endTime}
             error={fieldErrors.endTime ? t(fieldErrors.endTime) : undefined}
             onChange={(e) => {
@@ -300,7 +309,7 @@ function RecurringBatchBody({
           >
             <Group gap="xs">
               {weekdays.map((day) => (
-                <Chip key={day} value={day} size="xs" variant="light">
+                <Chip key={day} value={day} size="xs" variant="light" disabled={creating}>
                   {t(`events.programs.weekdays.${day}`)}
                 </Chip>
               ))}
@@ -314,7 +323,13 @@ function RecurringBatchBody({
         </Stack>
 
         <Group justify="flex-end" gap="sm">
-          <Button type="submit" variant="light" size="sm" loading={previewMutation.isPending}>
+          <Button
+            type="submit"
+            variant="light"
+            size="sm"
+            loading={previewMutation.isPending}
+            disabled={creating}
+          >
             {t('events.programs.previewAction')}
           </Button>
         </Group>
@@ -333,6 +348,7 @@ function RecurringBatchBody({
                 <Button
                   variant="subtle"
                   size="xs"
+                  disabled={creating}
                   onClick={() => setSelectedDates(validDates)}
                 >
                   {t('events.programs.selectAllValid')}
@@ -355,7 +371,7 @@ function RecurringBatchBody({
                         <Group justify="space-between" wrap="nowrap" gap="sm">
                           <Checkbox
                             checked={checked}
-                            disabled={hasConflict}
+                            disabled={hasConflict || creating}
                             label={`${item.date} · ${formatVietnamTime(item.startsAt)}–${formatVietnamTime(item.endsAt)}`}
                             onChange={(event) => {
                               const isChecked = event.currentTarget.checked;
